@@ -3,91 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>複利計算アプリ</title>
+    <title>複利計算シミュレーター</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: #e5e7eb; /* Default text color */
         }
-        /* Interフォントの読み込み */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: -webkit-linear-gradient(45deg, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .input-label {
-            @apply block text-sm font-medium text-gray-700 mb-1;
+            @apply block text-sm font-medium text-gray-300 mb-1;
         }
         .input-field {
-            @apply mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm;
+            @apply mt-1 block w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors;
         }
         .input-field[readonly] {
-            @apply bg-gray-100 cursor-not-allowed;
+            @apply bg-gray-800/60 cursor-not-allowed;
         }
         .unit-span {
-            @apply ml-2 text-gray-500;
+            @apply ml-3 text-gray-400 text-sm;
         }
         .error-message {
-            @apply mt-2 text-sm text-red-600;
+            @apply mt-2 text-sm text-red-400;
         }
-        /* カスタムラジオボタンスタイル */
         .custom-radio-label {
-            @apply flex items-center p-3 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 ease-in-out;
+            @apply flex items-center p-3 bg-gray-700/30 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700/60 transition-colors duration-150 ease-in-out;
+        }
+        .custom-radio-label.checked {
+            @apply bg-indigo-600/50 border-indigo-500;
         }
         .custom-radio-label input[type="radio"] {
-            @apply appearance-none w-4 h-4 border border-gray-400 rounded-full bg-white checked:bg-indigo-600 checked:border-indigo-600 focus:outline-none transition duration-200 align-middle select-none shrink-0;
+            @apply sr-only; /* Hide original radio */
         }
-        .custom-radio-label input[type="radio"]:checked::before {
-            content: "";
-            @apply block w-2 h-2 bg-white rounded-full m-auto;
+        .custom-radio-label .radio-dot {
+            @apply w-4 h-4 border-2 border-gray-400 rounded-full bg-gray-700 transition-all duration-200;
+        }
+        .custom-radio-label.checked .radio-dot {
+            @apply bg-indigo-500 border-indigo-300;
         }
         .custom-radio-label span {
-            @apply ml-3 text-sm font-medium text-gray-700;
+            @apply ml-3 text-sm font-medium text-gray-200;
         }
     </style>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl w-full max-w-lg">
-        <h1 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">複利計算アプリ</h1>
-        <p class="text-sm text-gray-600 mb-6 text-center">3つの値を入力すると、残りの1つを計算します。</p>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="glass-card p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg">
+        <h1 class="text-2xl sm:text-3xl font-bold text-center text-white mb-2">複利計算<span class="gradient-text">シミュレーター</span></h1>
+        <p class="text-sm text-gray-400 mb-8 text-center">4つの項目のうち3つを入力すると、残りを自動で計算します。</p>
 
         <div class="mb-6">
-            <label class="input-label mb-2">何を計算しますか？</label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-                <div>
-                    <label class="custom-radio-label">
-                        <input type="radio" name="calculationTarget" value="dailyRate" checked>
-                        <span>日利 (%)</span>
-                    </label>
-                </div>
-                <div>
-                    <label class="custom-radio-label">
-                        <input type="radio" name="calculationTarget" value="days">
-                        <span>日数</span>
-                    </label>
-                </div>
-                <div>
-                    <label class="custom-radio-label">
-                        <input type="radio" name="calculationTarget" value="finalAmount">
-                        <span>最終金額 (円)</span>
-                    </label>
-                </div>
-                <div>
-                    <label class="custom-radio-label">
-                        <input type="radio" name="calculationTarget" value="initialPrincipal">
-                        <span>スタート証拠金 (円)</span>
-                    </label>
-                </div>
+            <label class="input-label mb-3 text-base">1. 計算したい項目を選択</label>
+            <div class="grid grid-cols-2 gap-3">
+                <label class="custom-radio-label" data-value="dailyRate">
+                    <input type="radio" name="calculationTarget" value="dailyRate" checked>
+                    <div class="radio-dot"></div>
+                    <span>日利 (%)</span>
+                </label>
+                <label class="custom-radio-label" data-value="days">
+                    <input type="radio" name="calculationTarget" value="days">
+                    <div class="radio-dot"></div>
+                    <span>運用日数</span>
+                </label>
+                <label class="custom-radio-label" data-value="finalAmount">
+                    <input type="radio" name="calculationTarget" value="finalAmount">
+                    <div class="radio-dot"></div>
+                    <span>最終金額</span>
+                </label>
+                <label class="custom-radio-label" data-value="initialPrincipal">
+                    <input type="radio" name="calculationTarget" value="initialPrincipal">
+                    <div class="radio-dot"></div>
+                    <span>スタート証拠金</span>
+                </label>
             </div>
         </div>
 
         <div class="space-y-4 mb-6">
+             <label class="input-label mb-3 text-base">2. わかる数値を入力</label>
             <div>
                 <label for="initialPrincipal" class="input-label">スタート証拠金</label>
                 <div class="flex items-center">
-                    <input type="number" id="initialPrincipal" class="input-field" placeholder="例: 1000000">
+                    <input type="number" id="initialPrincipal" class="input-field" placeholder="例: 1,000,000">
                     <span class="unit-span">円</span>
                 </div>
             </div>
             <div>
-                <label for="days" class="input-label">日数</label>
+                <label for="days" class="input-label">運用日数</label>
                  <div class="flex items-center">
                     <input type="number" id="days" class="input-field" placeholder="例: 30" step="1" min="1">
                     <span class="unit-span">日</span>
@@ -96,25 +108,25 @@
             <div>
                 <label for="finalAmountInput" class="input-label">最終金額</label>
                 <div class="flex items-center">
-                    <input type="number" id="finalAmountInput" class="input-field" placeholder="例: 1100000">
+                    <input type="number" id="finalAmountInput" class="input-field" placeholder="例: 1,100,000">
                     <span class="unit-span">円</span>
                 </div>
             </div>
             <div>
                 <label for="dailyRate" class="input-label">日利</label>
                 <div class="flex items-center">
-                    <input type="number" id="dailyRate" class="input-field" placeholder="例: 0.1" step="any">
+                    <input type="number" id="dailyRate" class="input-field" placeholder="例: 0.3" step="any">
                     <span class="unit-span">%</span>
                 </div>
             </div>
         </div>
 
-        <button id="calculateButton" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out">
+        <button id="calculateButton" class="w-full bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-300 transform hover:scale-105">
             計算する
         </button>
 
-        <div id="resultArea" class="mt-6 p-4 bg-indigo-50 rounded-lg min-h-[50px] flex items-center justify-center">
-             <p id="resultText" class="text-indigo-700 font-medium text-center"></p>
+        <div id="resultArea" class="mt-6 p-4 bg-gray-900/50 rounded-lg min-h-[60px] flex items-center justify-center border border-transparent">
+             <p id="resultText" class="text-indigo-300 font-medium text-center text-lg"></p>
         </div>
         <div id="errorArea" class="mt-2 min-h-[20px]">
             <p id="errorText" class="error-message text-center"></p>
@@ -123,6 +135,7 @@
 
     <script>
         const calculationTargetRadios = document.querySelectorAll('input[name="calculationTarget"]');
+        const radioLabels = document.querySelectorAll('.custom-radio-label');
         const initialPrincipalInput = document.getElementById('initialPrincipal');
         const daysInput = document.getElementById('days');
         const finalAmountInput = document.getElementById('finalAmountInput');
@@ -130,6 +143,7 @@
         const calculateButton = document.getElementById('calculateButton');
         const resultText = document.getElementById('resultText');
         const errorText = document.getElementById('errorText');
+        const resultArea = document.getElementById('resultArea');
 
         const inputs = {
             initialPrincipal: initialPrincipalInput,
@@ -147,22 +161,45 @@
             const target = getSelectedCalculationTarget();
             if (!target) return;
 
-            for (const key in inputs) {
-                if (key === target) {
-                    inputs[key].readOnly = true;
-                    inputs[key].classList.add('bg-gray-100', 'cursor-not-allowed');
-                    inputs[key].value = '';
+            radioLabels.forEach(label => {
+                if (label.dataset.value === target) {
+                    label.classList.add('checked');
                 } else {
-                    inputs[key].readOnly = false;
-                    inputs[key].classList.remove('bg-gray-100', 'cursor-not-allowed');
+                    label.classList.remove('checked');
+                }
+            });
+
+            for (const key in inputs) {
+                const inputEl = inputs[key];
+                const parentLabel = inputEl.closest('div');
+                if (key === target) {
+                    inputEl.readOnly = true;
+                    inputEl.classList.add('input-field[readonly]');
+                    inputEl.value = '';
+                    inputEl.placeholder = '計算結果が出力されます';
+                    if(parentLabel) parentLabel.style.opacity = '0.5';
+                } else {
+                    inputEl.readOnly = false;
+                    inputEl.classList.remove('input-field[readonly]');
+                    if(parentLabel) parentLabel.style.opacity = '1';
+                    // Reset placeholders
+                    if(key === 'initialPrincipal') inputEl.placeholder = '例: 1,000,000';
+                    if(key === 'days') inputEl.placeholder = '例: 30';
+                    if(key === 'finalAmount') inputEl.placeholder = '例: 1,100,000';
+                    if(key === 'dailyRate') inputEl.placeholder = '例: 0.3';
                 }
             }
             resultText.textContent = '';
             errorText.textContent = '';
+            resultArea.classList.remove('border-red-500/50', 'border-green-500/50');
         }
 
-        calculationTargetRadios.forEach(radio => {
-            radio.addEventListener('change', updateInputStates);
+        radioLabels.forEach(label => {
+            label.addEventListener('click', () => {
+                const radio = label.querySelector('input[type="radio"]');
+                radio.checked = true;
+                updateInputStates();
+            });
         });
         
         updateInputStates();
@@ -170,10 +207,12 @@
         calculateButton.addEventListener('click', () => {
             resultText.textContent = '';
             errorText.textContent = '';
+            resultArea.classList.remove('border-red-500/50', 'border-green-500/50');
 
             const target = getSelectedCalculationTarget();
             if (!target) {
                 errorText.textContent = '計算対象を選択してください。';
+                resultArea.classList.add('border-red-500/50');
                 return;
             }
 
@@ -181,7 +220,7 @@
 
             try {
                 if (target !== 'initialPrincipal') {
-                    pv = parseFloat(initialPrincipalInput.value);
+                    pv = parseFloat(initialPrincipalInput.value.replace(/,/g, ''));
                     if (isNaN(pv) || pv <= 0) throw new Error('スタート証拠金は正の数を入力してください。');
                 }
                 if (target !== 'days') {
@@ -189,7 +228,7 @@
                     if (isNaN(n) || n <= 0) throw new Error('日数は正の整数を入力してください。');
                 }
                 if (target !== 'finalAmount') { 
-                    fa = parseFloat(finalAmountInput.value); 
+                    fa = parseFloat(finalAmountInput.value.replace(/,/g, '')); 
                     if (isNaN(fa) || fa <= 0) throw new Error('最終金額は正の数を入力してください。');
                 }
                 if (target !== 'dailyRate') {
@@ -203,9 +242,7 @@
 
                 switch (target) {
                     case 'dailyRate':
-                        if (pv <= 0) throw new Error('スタート証拠金は正の数である必要があります。');
-                        if (fa <= 0) throw new Error('最終金額は正の数である必要があります。');
-                        if (n <= 0) throw new Error('日数は正の整数である必要があります。');
+                        if (pv <= 0 || fa <= 0 || n <= 0) throw new Error('入力値は全て正の数である必要があります。');
                         if (pv === fa) {
                             calculationResultValue = 0;
                         } else {
@@ -213,71 +250,57 @@
                             calculationResultValue = (Math.pow(fa / pv, 1 / n) - 1) * 100;
                         }
                         if (isNaN(calculationResultValue) || !isFinite(calculationResultValue)) {
-                            throw new Error('日利を計算できません。入力値を確認してください。(例: 最終金額が0、または日数が0)');
+                            throw new Error('日利を計算できません。入力値を確認してください。');
                         }
                         dailyRateInput.value = calculationResultValue.toFixed(4);
-                        resultMessage = `計算された日利: ${calculationResultValue.toFixed(4)} %`;
+                        resultMessage = `日利: ${calculationResultValue.toFixed(4)} %`;
                         break;
 
                     case 'days':
-                        if (pv <= 0) throw new Error('スタート証拠金は正の数である必要があります。');
-                        if (fa <= 0) throw new Error('最終金額は正の数である必要があります。');
-                        if (isNaN(rDecimal)) throw new Error('日利を数値で入力してください。');
-
+                        if (pv <= 0 || fa <= 0 || isNaN(rDecimal)) throw new Error('入力値が不正です。');
                         if (rDecimal === 0) {
-                            if (pv !== fa) throw new Error('日利0%の場合、スタート証拠金と最終金額は同じである必要があります。');
-                            throw new Error('日利0%で最終金額がスタート証拠金と同じ場合、日数は特定できません。');
+                            if (pv !== fa) throw new Error('日利0%の場合、スタートと最終金額は同じである必要があります。');
+                            throw new Error('日利0%では日数は特定できません。');
                         }
-                        if (1 + rDecimal <= 0) throw new Error('日利が-100%以下の場合、日数は計算できません。');
-                        if (fa / pv <= 0) throw new Error('最終金額はスタート証拠金に対して適切な正の値である必要があります。');
-                        
-                        if ((fa > pv && rDecimal < 0) || (fa < pv && rDecimal > 0 && (1+rDecimal) > 1 )) {
-                            if (fa > pv && rDecimal < 0) throw new Error('最終金額が増加していますが日利がマイナスです。日数を計算できません。');
-                            if (fa < pv && rDecimal > 0) throw new Error('最終金額が減少していますが日利がプラスです。日数を計算できません。');
+                        if ((fa > pv && rDecimal < 0) || (fa < pv && rDecimal > 0)) {
+                            throw new Error('目標金額と日利の方向が矛盾しています。');
                         }
-
                         calculationResultValue = Math.log(fa / pv) / Math.log(1 + rDecimal);
                         if (isNaN(calculationResultValue) || !isFinite(calculationResultValue) || calculationResultValue < 0) {
-                             throw new Error('日数を計算できません。入力値を確認してください。(例: 目標金額に到達不可能、または日利が不適切)');
+                             throw new Error('日数を計算できません。入力値を確認してください。');
                         }
                         daysInput.value = Math.ceil(calculationResultValue);
-                        resultMessage = `計算された日数: ${Math.ceil(calculationResultValue)} 日`;
+                        resultMessage = `運用日数: ${Math.ceil(calculationResultValue)} 日`;
                         break;
 
                     case 'finalAmount':
-                        if (pv <= 0) throw new Error('スタート証拠金は正の数である必要があります。');
-                        if (n <= 0) throw new Error('日数は正の整数である必要があります。');
-                        if (isNaN(rDecimal)) throw new Error('日利を数値で入力してください。');
-
+                        if (pv <= 0 || n <= 0 || isNaN(rDecimal)) throw new Error('入力値が不正です。');
                         calculationResultValue = pv * Math.pow(1 + rDecimal, n);
                         if (isNaN(calculationResultValue) || !isFinite(calculationResultValue)) {
                             throw new Error('最終金額を計算できません。入力値を確認してください。');
                         }
-                        finalAmountInput.value = calculationResultValue.toFixed(2);
-                        resultMessage = `計算された最終金額: ${calculationResultValue.toFixed(2)} 円`;
+                        finalAmountInput.value = calculationResultValue.toLocaleString('ja-JP', { maximumFractionDigits: 2 });
+                        resultMessage = `最終金額: ${calculationResultValue.toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' })}`;
                         break;
 
                     case 'initialPrincipal':
-                        if (fa <= 0) throw new Error('最終金額は正の数である必要があります。');
-                        if (n <= 0) throw new Error('日数は正の整数である必要があります。');
-                        if (isNaN(rDecimal)) throw new Error('日利を数値で入力してください。');
-                        
+                        if (fa <= 0 || n <= 0 || isNaN(rDecimal)) throw new Error('入力値が不正です。');
                         const denominator = Math.pow(1 + rDecimal, n);
-                        if (denominator === 0) {
-                            throw new Error('日利と日数の組み合わせにより、スタート証拠金が計算できません（ゼロ除算）。');
-                        }
+                        if (denominator === 0) throw new Error('計算できません（ゼロ除算）。');
                         calculationResultValue = fa / denominator;
                         if (isNaN(calculationResultValue) || !isFinite(calculationResultValue) || calculationResultValue <= 0) {
-                             throw new Error('スタート証拠金を計算できません。入力値を確認してください。(例: 最終金額が0で日利がプラス)');
+                             throw new Error('スタート証拠金を計算できません。入力値を確認してください。');
                         }
-                        initialPrincipalInput.value = calculationResultValue.toFixed(2);
-                        resultMessage = `計算されたスタート証拠金: ${calculationResultValue.toFixed(2)} 円`;
+                        initialPrincipalInput.value = calculationResultValue.toLocaleString('ja-JP', { maximumFractionDigits: 2 });
+                        resultMessage = `スタート証拠金: ${calculationResultValue.toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' })}`;
                         break;
                 }
                 resultText.textContent = resultMessage;
+                resultArea.classList.add('border-green-500/50');
 
             } catch (error) {
                 errorText.textContent = error.message;
+                resultArea.classList.add('border-red-500/50');
             }
         });
     </script>

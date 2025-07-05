@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角井食品 動画マニュアル</title>
+    <!-- Tailwind CSSを読み込みます -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Googleフォント 'Inter' を読み込みます */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        /* アコーディオンのコンテンツ部分のスタイル */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        /* アイコンのスタイル */
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+
+        /* アコーディオンが開いているときのアイコンのスタイル */
+        .accordion-button.open .accordion-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Google翻訳ウィジェットのデフォルトUIを非表示にするためのスタイル */
+        .skiptranslate {
+            display: none !important;
+        }
+        body {
+            top: 0 !important;
+        }
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- ヘッダー -->
+        <header class="flex justify-between items-start mb-8">
+            <div>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                    角井食品 動画マニュアル
+                </h1>
+                <p class="text-xl text-gray-500 mt-1">Kakui Foods Video Manual</p>
+            </div>
+            <!-- 翻訳ボタン -->
+            <div>
+                <button id="translate-button" class="flex items-center space-x-3 bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg shadow-sm hover:bg-gray-100 transition-colors">
+                    <!-- Google Translate Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+                    </svg>
+                    <div class="text-left">
+                        <div class="font-semibold">翻訳</div>
+                        <div class="text-xs text-gray-500">Terjemahkan (Indonesia)</div>
+                        <div class="text-xs text-gray-500">Dịch (Tiếng Việt)</div>
+                        <div class="text-xs text-gray-500">अनुवाद गर्नुहोस् (नेपाली)</div>
+                        <div class="text-xs text-gray-500">Которуу (Кыргызча)</div>
+                        <div class="text-xs text-gray-500">ဘာသာပြန်ရန် (မြန်မာ)</div>
+                    </div>
+                </button>
+                <!-- Google翻訳ウィジェットのコンテナ（非表示） -->
+                <div id="google_translate_element" class="mt-2" style="display: none;"></div>
+            </div>
+        </header>
+
+        <main class="max-w-4xl mx-auto">
+            
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4">作業場所リスト</h2>
+                <p class="text-gray-600 mb-6">見たい作業場所をクリックしてください。</p>
+
+                <!-- マニュアルのリスト -->
+                <div id="manual-list" class="space-y-4">
+
+                    <!-- ===== 更新されたマニュアル (NEW) ===== -->
+                    <div class="border-2 border-red-500 rounded-lg shadow-lg">
+                        <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-800 bg-red-100 hover:bg-red-200 transition-colors rounded-t-lg">
+                            <span class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                更新されたマニュアル
+                                <span class="ml-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full animate-pulse">NEW</span>
+                            </span>
+                            <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                        <div class="accordion-content bg-white rounded-b-lg">
+                            <ul class="p-4 space-y-2 border-t">
+                                <!-- ここに新しい動画のリンクを追加します -->
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-red-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>新しい洗浄機の使い方 (2025/07/05追加)</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-red-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>梱包エリアの新しいルール (2025/07/01追加)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ===== 惣菜調理ライン ===== -->
+                    <div class="border rounded-lg">
+                        <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                惣菜調理ライン
+                            </span>
+                            <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                        <div class="accordion-content bg-white rounded-b-lg">
+                            <ul class="p-4 space-y-2 border-t">
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-blue-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>1. 野菜のカット方法</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-blue-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>2. 煮込み調理の手順</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-blue-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>3. 揚げ物調理の注意点</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ===== 冷凍食品ライン ===== -->
+                    <div class="border rounded-lg">
+                        <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                冷凍食品ライン
+                            </span>
+                            <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                        <div class="accordion-content bg-white rounded-b-lg">
+                            <ul class="p-4 space-y-2 border-t">
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-green-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>1. 原料の投入と機械操作</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-green-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>2. 成形作業の手順</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-green-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>3. 急速冷凍庫の取り扱い</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- ===== 包装・梱包エリア ===== -->
+                    <div class="border rounded-lg">
+                        <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                                包装・梱包エリア
+                            </span>
+                            <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                        <div class="accordion-content bg-white rounded-b-lg">
+                            <ul class="p-4 space-y-2 border-t">
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-purple-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>1. 計量と袋詰め</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-purple-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>2. 真空パック機械の使い方</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-purple-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>3. 箱詰めとラベル貼り</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- ===== 衛生管理 ===== -->
+                    <div class="border rounded-lg">
+                        <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                衛生管理
+                            </span>
+                            <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                        <div class="accordion-content bg-white rounded-b-lg">
+                            <ul class="p-4 space-y-2 border-t">
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-yellow-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>1. 正しい手洗い方法</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-yellow-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>2. 調理器具の洗浄と消毒</a></li>
+                                <li><a href="#" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-yellow-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>3. 作業場の清掃手順</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="text-center mt-8">
+            <p class="text-gray-500">&copy; 2024 角井食品株式会社</p>
+        </footer>
+
+    </div>
+
+    <!-- Google翻訳のスクリプト -->
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
+        // --- アコーディオン機能 ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const accordionButtons = document.querySelectorAll('.accordion-button');
+
+            accordionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // 変更点：buttonの直接の兄弟要素ではなく、親要素からコンテンツを探すようにして、より安定させます。
+                    const content = button.parentElement.querySelector('.accordion-content');
+                    const isOpen = button.classList.contains('open');
+                    
+                    if (isOpen) {
+                        // アコーディオンを閉じる
+                        button.classList.remove('open');
+                        content.style.maxHeight = null;
+                    } else {
+                        // アコーディオンを開く
+                        button.classList.add('open');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                });
+            });
+        });
+
+        // --- Google翻訳機能 ---
+        // Google翻訳ウィジェットを初期化する関数
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ja', // ページの言語
+                autoDisplay: false,  // バナーの自動表示を無効化
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE // シンプルなレイアウト
+            }, 'google_translate_element');
+        }
+
+        // 翻訳ボタンがクリックされたときの処理
+        document.getElementById('translate-button').addEventListener('click', function () {
+            const googleTranslateElement = document.getElementById('google_translate_element');
+            
+            // 翻訳ウィジェットの表示・非表示を切り替える
+            if (googleTranslateElement.style.display === 'none') {
+                googleTranslateElement.style.display = 'block';
+            } else {
+                googleTranslateElement.style.display = 'none';
+            }
+
+            // 翻訳ウィジェット内の言語選択メニューを探してクリックイベントを発火させる
+            // これにより、ユーザーが言語を選べるようになります
+            const langSelector = googleTranslateElement.querySelector('.goog-te-menu-value');
+            if (langSelector) {
+                langSelector.click();
+            }
+        });
+    </script>
+
+</body>
+</html>

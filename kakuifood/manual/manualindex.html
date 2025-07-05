@@ -261,75 +261,95 @@
     </div>
 
     <!-- Google翻訳のスクリプト -->
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
-        // --- アコーディオン機能 ---
+        // --- ページ初期化処理 ---
         document.addEventListener('DOMContentLoaded', function () {
-            const accordionButtons = document.querySelectorAll('.accordion-button');
+            console.log('[DEBUG] DOMContentLoaded: ページの初期化を開始します。');
 
-            accordionButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const content = button.parentElement.querySelector('.accordion-content');
-                    const isOpen = button.classList.contains('open');
-                    
-                    if (isOpen) {
-                        // アコーディオンを閉じる
-                        button.classList.remove('open');
-                        content.style.maxHeight = null;
-                    } else {
-                        // アコーディオンを開く
-                        button.classList.add('open');
-                        content.style.maxHeight = content.scrollHeight + 'px';
+            // --- アコーディオン機能 ---
+            try {
+                const accordionButtons = document.querySelectorAll('.accordion-button');
+                accordionButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const content = button.parentElement.querySelector('.accordion-content');
+                        if (content) {
+                            const isOpen = button.classList.contains('open');
+                            if (isOpen) {
+                                button.classList.remove('open');
+                                content.style.maxHeight = null;
+                            } else {
+                                button.classList.add('open');
+                                content.style.maxHeight = content.scrollHeight + 'px';
+                            }
+                        }
+                    });
+                });
+                console.log(`[DEBUG] アコーディオン: ${accordionButtons.length}個のボタンを初期化しました。`);
+            } catch (e) {
+                console.error('[DEBUG] アコーディオンでエラーが発生しました:', e);
+            }
+
+            // --- 翻訳機能 ---
+            try {
+                const translateButton = document.getElementById('translate-button');
+                const languageMenu = document.getElementById('language-menu');
+
+                if (!translateButton || !languageMenu) {
+                    console.error('[DEBUG] 翻訳: ボタンまたはメニューが見つかりません。');
+                    return;
+                }
+                console.log('[DEBUG] 翻訳: ボタンとメニューを見つけました。');
+
+                // ボタンクリックでメニュー表示
+                translateButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    languageMenu.classList.toggle('hidden');
+                    console.log(`[DEBUG] 翻訳: メニューの表示を切り替えました。`);
+                });
+
+                // 外側クリックでメニューを閉じる
+                document.addEventListener('click', function() {
+                    if (!languageMenu.classList.contains('hidden')) {
+                        languageMenu.classList.add('hidden');
                     }
                 });
-            });
+
+                // 言語選択の処理
+                languageMenu.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation(); // ★追加: イベント伝播を停止
+                    const target = event.target;
+                    if (target.tagName === 'A' && target.dataset.lang) {
+                        const lang = target.dataset.lang;
+                        console.log(`[DEBUG] 翻訳: 言語「${lang}」が選択されました。`);
+                        
+                        // Google翻訳のCookieをセット (googtransを使用)
+                        document.cookie = `googtrans=/ja/${lang}; path=/`; // ★変更: Cookie名と値の形式
+                        console.log(`[DEBUG] 翻訳: Cookie 'googtrans'を'/ja/${lang}'にセットしました。`);
+
+                        // ページをリロード
+                        console.log('[DEBUG] 翻訳: ページをリロードします。');
+                        location.reload();
+                    } else {
+                        console.warn('[DEBUG] 翻訳: クリックされた要素は有効な言語リンクではありません:', target);
+                    }
+                });
+                console.log('[DEBUG] 翻訳: イベントリスナーをセットしました。');
+            } catch (e) {
+                console.error('[DEBUG] 翻訳機能でエラーが発生しました:', e);
+            }
         });
 
-        // --- Google翻訳機能（新バージョン） ---
+        // --- Google翻訳ウィジェットの初期化 ---
         function googleTranslateElementInit() {
+            console.log('[DEBUG] Google翻訳: 公式初期化関数が呼ばれました。');
             new google.translate.TranslateElement({
                 pageLanguage: 'ja',
                 autoDisplay: false
             }, 'google_translate_element');
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const translateButton = document.getElementById('translate-button');
-            const languageMenu = document.getElementById('language-menu');
-
-            // 翻訳ボタンをクリックしたら言語メニューを表示/非表示
-            translateButton.addEventListener('click', function(event) {
-                event.stopPropagation();
-                languageMenu.classList.toggle('hidden');
-            });
-
-            // メニューの外側をクリックしたらメニューを閉じる
-            document.addEventListener('click', function() {
-                if (!languageMenu.classList.contains('hidden')) {
-                    languageMenu.classList.add('hidden');
-                }
-            });
-
-            // 言語を選択したときの処理
-            languageMenu.addEventListener('click', function(event) {
-                event.preventDefault();
-                const target = event.target;
-                if (target.tagName === 'A' && target.dataset.lang) {
-                    const lang = target.dataset.lang;
-                    
-                    // Google翻訳の状態を保存するCookieを書き換える
-                    // 有効期限を1日に設定
-                    const date = new Date();
-                    date.setTime(date.getTime() + (24*60*60*1000));
-                    const expires = "; expires=" + date.toUTCString();
-                    document.cookie = `goog-gt-lng=${lang};path=/;${expires}`;
-
-                    // ページをリロードして翻訳を適用
-                    location.reload();
-                }
-            });
-        });
     </script>
 
 </body>

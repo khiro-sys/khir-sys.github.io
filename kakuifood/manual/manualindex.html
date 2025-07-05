@@ -56,24 +56,27 @@
                 </h1>
                 <p class="text-xl text-gray-500 mt-1">Kakui Foods Video Manual</p>
             </div>
-            <!-- 翻訳ボタン -->
-            <div>
+            <!-- 翻訳ボタン（新しい構造） -->
+            <div class="relative">
                 <button id="translate-button" class="flex items-center space-x-3 bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg shadow-sm hover:bg-gray-100 transition-colors">
-                    <!-- Google Translate Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
                     </svg>
                     <div class="text-left">
-                        <div class="font-semibold">翻訳</div>
-                        <div class="text-xs text-gray-500">Terjemahkan (Indonesia)</div>
-                        <div class="text-xs text-gray-500">Dịch (Tiếng Việt)</div>
-                        <div class="text-xs text-gray-500">अनुवाद गर्नुहोस् (नेपाली)</div>
-                        <div class="text-xs text-gray-500">Которуу (Кыргызча)</div>
-                        <div class="text-xs text-gray-500">ဘာသာပြန်ရန် (မြန်မာ)</div>
+                        <div class="font-semibold">翻訳 / Translate</div>
                     </div>
                 </button>
-                <!-- Google翻訳ウィジェットのコンテナ（非表示） -->
-                <div id="google_translate_element" class="mt-2" style="display: none;"></div>
+                <!-- 言語選択メニュー -->
+                <div id="language-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="ja">日本語 (Original)</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="id">Bahasa Indonesia</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="vi">Tiếng Việt</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="ne">नेपाली</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="ky">Кыргызча</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="my">မြန်မာ</a>
+                </div>
+                <!-- Google翻訳ウィジェットのコンテナ（非表示のまま） -->
+                <div id="google_translate_element" style="display: none;"></div>
             </div>
         </header>
 
@@ -283,33 +286,49 @@
             });
         });
 
-        // --- Google翻訳機能 ---
-        // Google翻訳ウィジェットを初期化する関数
+        // --- Google翻訳機能（新バージョン） ---
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
-                pageLanguage: 'ja', // ページの言語
-                autoDisplay: false,  // バナーの自動表示を無効化
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE // シンプルなレイアウト
+                pageLanguage: 'ja',
+                autoDisplay: false
             }, 'google_translate_element');
         }
 
-        // 翻訳ボタンがクリックされたときの処理
-        document.getElementById('translate-button').addEventListener('click', function () {
-            const googleTranslateElement = document.getElementById('google_translate_element');
-            
-            // 翻訳ウィジェットの表示・非表示を切り替える
-            if (googleTranslateElement.style.display === 'none') {
-                googleTranslateElement.style.display = 'block';
-            } else {
-                googleTranslateElement.style.display = 'none';
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            const translateButton = document.getElementById('translate-button');
+            const languageMenu = document.getElementById('language-menu');
 
-            // 翻訳ウィジェット内の言語選択メニューを探してクリックイベントを発火させる
-            // これにより、ユーザーが言語を選べるようになります
-            const langSelector = googleTranslateElement.querySelector('.goog-te-menu-value');
-            if (langSelector) {
-                langSelector.click();
-            }
+            // 翻訳ボタンをクリックしたら言語メニューを表示/非表示
+            translateButton.addEventListener('click', function(event) {
+                event.stopPropagation();
+                languageMenu.classList.toggle('hidden');
+            });
+
+            // メニューの外側をクリックしたらメニューを閉じる
+            document.addEventListener('click', function() {
+                if (!languageMenu.classList.contains('hidden')) {
+                    languageMenu.classList.add('hidden');
+                }
+            });
+
+            // 言語を選択したときの処理
+            languageMenu.addEventListener('click', function(event) {
+                event.preventDefault();
+                const target = event.target;
+                if (target.tagName === 'A' && target.dataset.lang) {
+                    const lang = target.dataset.lang;
+                    
+                    // Google翻訳の状態を保存するCookieを書き換える
+                    // 有効期限を1日に設定
+                    const date = new Date();
+                    date.setTime(date.getTime() + (24*60*60*1000));
+                    const expires = "; expires=" + date.toUTCString();
+                    document.cookie = `goog-gt-lng=${lang};path=/;${expires}`;
+
+                    // ページをリロードして翻訳を適用
+                    location.reload();
+                }
+            });
         });
     </script>
 

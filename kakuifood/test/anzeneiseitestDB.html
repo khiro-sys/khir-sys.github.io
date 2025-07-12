@@ -7,36 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Noto Sans JP', sans-serif;
-        }
-        .quiz-option:hover {
-            background-color: #f0f9ff; /* sky-50 */
-        }
-        .correct {
-            background-color: #dcfce7; /* green-100 */
-            border-left-color: #22c55e; /* green-500 */
-        }
-        .incorrect {
-            background-color: #fee2e2; /* red-100 */
-            border-left-color: #ef4444; /* red-500 */
-        }
-        .explanation {
-            font-size: 0.9rem;
-            color: #4b5563; /* gray-600 */
-        }
-        /* ふりがな（ルビ）のスタイル */
-        rt {
-            font-size: 0.7em;
-            font-weight: 500;
-            user-select: none; /* ルビテキストを選択できないようにする */
-        }
-        ruby {
-            line-height: 1.2;
-        }
-        .hidden {
-            display: none;
-        }
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .quiz-option:hover { background-color: #f0f9ff; }
+        .correct { background-color: #dcfce7; border-left-color: #22c55e; }
+        .incorrect { background-color: #fee2e2; border-left-color: #ef4444; }
+        .explanation { font-size: 0.9rem; color: #4b5563; }
+        rt { font-size: 0.7em; font-weight: 500; user-select: none; }
+        ruby { line-height: 1.2; }
+        .hidden { display: none; }
         .loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #3498db;
@@ -64,9 +42,7 @@
             </p>
         </header>
 
-        <!-- メインコンテンツエリア -->
         <div id="main-content">
-            <!-- 名前入力エリア -->
             <div id="start-container" class="bg-white p-6 md:p-8 rounded-xl shadow-lg text-center">
                 <h2 class="text-xl font-semibold mb-2">あなたの <ruby>名前<rt>なまえ</rt></ruby>を <ruby>教<rt>おし</rt></ruby>えてください</h2>
                 <p class="text-gray-600 mb-4">100<ruby>点<rt>てん</rt></ruby>とるまで、なんかいでも テストを <ruby>受<rt>う</rt></ruby>けてください。</p>
@@ -77,11 +53,9 @@
                 </button>
             </div>
 
-            <!-- クイズ本体エリア -->
             <div id="quiz-wrapper" class="hidden">
                 <div id="quiz-container" class="bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-8">
-                    <!-- クイズの質問はここに動的に挿入されます -->
-                </div>
+                    </div>
 
                 <div id="submit-container" class="mt-8 text-center">
                     <button id="submit-btn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105">
@@ -90,20 +64,19 @@
                 </div>
 
                 <div id="results-container" class="hidden mt-10 bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                     <h2 class="text-2xl font-bold text-center mb-4">テストの <ruby>結果<rt>けっか</rt></ruby></h2>
+                    <h2 class="text-2xl font-bold text-center mb-4">テストの <ruby>結果<rt>けっか</rt></ruby></h2>
                      
                      <div class="flex items-center justify-center gap-4 mb-4">
                         <p id="score" class="text-center text-3xl font-bold"></p>
                         <button id="record-btn" class="hidden bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50">
                             <ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する
                         </button>
-                     </div>
+                    </div>
 
                      <p id="feedback-message" class="text-center text-lg font-semibold my-6 p-3 rounded-lg"></p>
 
                      <div id="feedback-container" class="space-y-4">
-                         <!-- 各問題のフィードバックはここに挿入されます -->
-                     </div>
+                         </div>
                      
                      <div id="retake-actions" class="hidden mt-8 text-center">
                         <button id="retake-btn" class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 transform hover:scale-105">
@@ -114,7 +87,6 @@
                 </div>
             </div>
             
-            <!-- 記録完了画面 -->
             <div id="success-container" class="hidden bg-white p-8 md:p-12 rounded-xl shadow-lg text-center">
                 <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -126,7 +98,6 @@
             </div>
         </div>
 
-        <!-- 結果一覧表示エリア -->
         <div id="admin-view" class="hidden">
              <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg">
                 <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
@@ -145,15 +116,14 @@
                     <table id="results-table" class="w-full text-sm text-left text-gray-600">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3">合格日時</th>
+                                 <th scope="col" class="px-6 py-3">合格日時</th>
                                 <th scope="col" class="px-6 py-3">受験者名</th>
                                 <th scope="col" class="px-6 py-3">合格までの回数</th>
                                 <th scope="col" class="px-6 py-3">点数履歴</th>
                             </tr>
                         </thead>
                         <tbody id="results-body">
-                            <!-- 結果はここに動的に挿入されます -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
                 <div id="no-results" class="hidden text-center py-12">
@@ -169,7 +139,6 @@
         </footer>
     </div>
     
-    <!-- パスワード入力モーダル -->
     <div id="password-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
         <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
             <h3 class="text-lg font-bold mb-4">パスワードを<ruby>入力<rt>にゅうりょく</rt></ruby>してください</h3>
@@ -186,13 +155,12 @@
         </div>
     </div>
 
-    <!-- 削除確認モーダル -->
     <div id="confirm-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
         <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
             <h3 class="text-lg font-bold mb-4">本当にすべての記録を削除しますか？</h3>
             <p class="text-sm text-gray-600 mb-6">この操作は元に戻せません。</p>
             <div class="flex justify-center gap-4">
-                <button id="cancel-delete" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400">
+                 <button id="cancel-delete" class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400">
                     キャンセル
                 </button>
                 <button id="confirm-delete" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
@@ -203,41 +171,41 @@
     </div>
 
     <script type="module">
-        // Firebase ライブラリをインポート
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
         // ★★★ 修正箇所 ★★★
-        // DOMContentLoaded イベントリスナー内で全ての処理を実行
+        // Firebase ライブラリと設定情報をここに記述
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTpqsLqyHmBQiik13TpCDVhga9EB67D0M",
+            authDomain: "kakui-food-test.firebaseapp.com",
+            projectId: "kakui-food-test",
+            storageBucket: "kakui-food-test.firebasestorage.app",
+            messagingSenderId: "165109669466",
+            appId: "1:165109669466:web:ff8d45411ba45cb577c263"
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
             
-            // 環境変数からFirebaseの接続キーを読み込む
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'haccp-quiz-app';
-
             let app, db, auth, resultsCollectionRef;
+            const appId = 'haccp-quiz-app'; // Firestoreのパスで使用するID
             
             try {
-                if (!firebaseConfig || !firebaseConfig.apiKey) {
-                    throw new Error("Firebase config is not defined or invalid.");
-                }
                 // Firebaseの初期化と認証
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
                 
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                console.log("Firebase initialized and user signed in.");
+                await signInAnonymously(auth);
+                console.log("Firebase initialized and user signed in anonymously.");
+                
+                // Firestoreのコレクション参照を修正
                 resultsCollectionRef = collection(db, `artifacts/${appId}/public/data/haccpQuizResults`);
                 
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                // ユーザーに表示するアラートをシンプルにする
                 const startContainer = document.getElementById('start-container');
                 if(startContainer) {
                     startContainer.innerHTML = `<p class="text-red-500 text-center">データベースに接続できませんでした。<br>ページを再読み込みするか、管理者に連絡してください。</p>`;
@@ -317,7 +285,6 @@
             const confirmPasswordBtn = document.getElementById('confirm-password');
             const cancelPasswordBtn = document.getElementById('cancel-password');
 
-
             // --- 関数 ---
 
             /**
@@ -349,6 +316,7 @@
                             ${option}
                         </label>
                     `).join('');
+                    
                     questionEl.innerHTML = `<p class="text-xl font-semibold mb-4">${quizItem.question}</p><div class="space-y-3">${optionsHtml}</div>`;
                     quizContainer.appendChild(questionEl);
                 });
@@ -381,7 +349,7 @@
                 scoreHistory.push(score);
                 const totalPoints = score * 5; // 1問5点
                 scoreEl.innerHTML = `${totalPoints}<ruby>点<rt>てん</rt></ruby> / 100<ruby>点<rt>てん</rt></ruby>`;
-                
+
                 let message = '';
                 let messageBgColor = '';
                 if (totalPoints <= 25) { message = 'まずは <ruby>基本<rt>きほん</rt></ruby>から！もう<ruby>一度<rt>いちど</rt></ruby> ビデオを <ruby>見<rt>み</rt></ruby>て、<ruby>復習<rt>ふくしゅう</rt></ruby>しましょう。'; messageBgColor = 'bg-red-100'; } 
@@ -416,7 +384,6 @@
                 resultsContainer.classList.add('hidden');
                 startContainer.classList.remove('hidden');
                 headerSubtitle.innerHTML = `<ruby>安全<rt>あんぜん</rt></ruby>な <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>を <ruby>作<rt>つく</rt></ruby>るための ルールを <ruby>確認<rt>かくにん</rt></ruby>しましょう。`;
-                
                 reportTriggerBtn.disabled = false;
                 reportTriggerBtn.innerHTML = '<ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する';
             }
@@ -432,7 +399,6 @@
                     querySnapshot.forEach((doc) => {
                         results.push({ id: doc.id, ...doc.data() });
                     });
-
                     adminLoader.classList.add('hidden');
 
                     if (results.length === 0) {
@@ -441,7 +407,6 @@
                         noResults.classList.add('hidden');
                         // 日付で降順にソート
                         results.sort((a, b) => new Date(b.date) - new Date(a.date));
-                        
                         results.forEach(result => {
                             const row = document.createElement('tr');
                             row.className = 'bg-white border-b';
@@ -519,7 +484,7 @@
                         reportTriggerBtn.innerHTML = '<ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する';
                     }
                 });
-                
+
                 restartBtn.addEventListener('click', resetTest);
 
                 // --- 管理者画面用イベントリスナー ---
@@ -540,7 +505,7 @@
                 cancelDeleteBtn.addEventListener('click', () => {
                     confirmModal.classList.add('hidden');
                 });
-                
+
                 confirmDeleteBtn.addEventListener('click', async () => {
                     confirmDeleteBtn.disabled = true;
                     confirmDeleteBtn.textContent = "削除中...";
@@ -572,7 +537,7 @@
 
                 confirmPasswordBtn.addEventListener('click', () => {
                     const password = passwordInput.value;
-                    if (password === '9324') {
+                    if (password === '9324') { // 管理者パスワード
                         passwordModal.classList.add('hidden');
                         mainContent.classList.add('hidden');
                         adminView.classList.remove('hidden');
@@ -584,6 +549,7 @@
                         passwordInput.value = '';
                     }
                 });
+                
                 // パスワード入力欄でEnterキーを押しても確認できるようにする
                 passwordInput.addEventListener('keypress', function(event) {
                     if (event.key === 'Enter') {
@@ -592,6 +558,9 @@
                     }
                 });
             }
+
+            // イベントリスナーを設定
+            setupEventListeners();
         });
     </script>
 </body>

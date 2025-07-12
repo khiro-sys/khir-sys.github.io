@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>しょくひんこうじょうの あんぜん・えいせい テスト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        .quiz-option:hover {
+            background-color: #f0f9ff; /* sky-50 */
+        }
+        .correct {
+            background-color: #dcfce7; /* green-100 */
+            border-left-color: #22c55e; /* green-500 */
+        }
+        .incorrect {
+            background-color: #fee2e2; /* red-100 */
+            border-left-color: #ef4444; /* red-500 */
+        }
+        .explanation {
+            font-size: 0.9rem;
+            color: #4b5563; /* gray-600 */
+        }
+        /* ふりがな（ルビ）のスタイル */
+        rt {
+            font-size: 0.7em;
+            font-weight: 500;
+            user-select: none; /* ルビテキストを選択できないようにする */
+        }
+        ruby {
+            line-height: 1.2;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-3xl">
+        <header class="text-center mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+                <ruby>食品工場<rt>しょくひんこうじょう</rt></ruby>の <ruby>安全<rt>あんぜん</rt></ruby>・<ruby>衛生<rt>えいせい</rt></ruby> テスト
+            </h1>
+            <p id="header-subtitle" class="mt-2 text-gray-600">
+                <ruby>安全<rt>あんぜん</rt></ruby>な <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>を <ruby>作<rt>つく</rt></ruby>るための ルールを <ruby>確認<rt>かくにん</rt></ruby>しましょう。
+            </p>
+        </header>
+
+        <!-- 名前入力エリア -->
+        <div id="start-container" class="bg-white p-6 md:p-8 rounded-xl shadow-lg text-center">
+            <h2 class="text-xl font-semibold mb-4">あなたの <ruby>名前<rt>なまえ</rt></ruby>を <ruby>教<rt>おし</rt></ruby>えてください</h2>
+            <input type="text" id="name-input" class="w-full max-w-sm mx-auto p-3 border border-gray-300 rounded-lg text-center text-lg" placeholder="カタカナで なまえを いれてください">
+            <p id="name-error" class="text-red-500 mt-2 h-6"></p>
+            <button id="start-btn" class="mt-4 bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105">
+                テストを <ruby>受<rt>う</rt></ruby>ける
+            </button>
+        </div>
+
+        <!-- クイズ本体エリア -->
+        <div id="quiz-wrapper" class="hidden">
+            <div id="quiz-container" class="bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-8">
+                <!-- クイズの質問はここに動的に挿入されます -->
+            </div>
+
+            <div id="submit-container" class="mt-8 text-center">
+                <button id="submit-btn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105">
+                    <ruby>答<rt>こた</rt></ruby>えを <ruby>見<rt>み</rt></ruby>る
+                </button>
+            </div>
+
+            <div id="results-container" class="hidden mt-10 bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                 <h2 class="text-2xl font-bold text-center mb-2">テストの <ruby>結果<rt>けっか</rt></ruby></h2>
+                 <p id="score" class="text-center text-3xl font-bold mb-4"></p>
+                 <p id="feedback-message" class="text-center text-lg font-semibold mb-6 p-3 rounded-lg"></p>
+                 <div id="feedback-container" class="space-y-4">
+                     <!-- 各問題のフィードバックはここに挿入されます -->
+                 </div>
+                 <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button id="retake-btn" class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 transform hover:scale-105">
+                        もう<ruby>一度<rt>いちど</rt></ruby>テストする
+                    </button>
+                    <button id="report-btn" class="hidden bg-red-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50">
+                        <ruby>角井部長<rt>かく いぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する
+                    </button>
+                    <p id="encourage-message" class="text-gray-600 font-semibold">100<ruby>点<rt>てん</rt></ruby> とるまで がんばって！</p>
+                 </div>
+            </div>
+        </div>
+        
+        <!-- 送信完了画面 -->
+        <div id="success-container" class="hidden bg-white p-8 md:p-12 rounded-xl shadow-lg text-center">
+            <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h2 id="success-message" class="text-xl md:text-2xl font-bold text-gray-800 mt-4 leading-relaxed"></h2>
+             <button id="restart-btn" class="mt-8 bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105">
+                <ruby>最初<rt>さいしょ</rt></ruby>から <ruby>始<rt>はじ</rt></ruby>める
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const quizData = [
+            // --- 衛生管理 ---
+            { question: "<ruby>問<rt>とい</rt></ruby>1：<ruby>工場<rt>こうじょう</rt></ruby>に <ruby>入<rt>はい</rt></ruby>る <ruby>前<rt>まえ</rt></ruby>に、してはいけないことは どれですか？", options: ["<ruby>時計<rt>とけい</rt></ruby>や ピアスを とる", "<ruby>帽子<rt>ぼうし</rt></ruby>を きちんと かぶる", "<ruby>粘着<rt>ねんちゃく</rt></ruby>ローラーで <ruby>服<rt>ふく</rt></ruby>の ゴミを とる", "<ruby>長<rt>なが</rt></ruby>い <ruby>爪<rt>つめ</rt></ruby>のまま <ruby>仕事<rt>しごと</rt></ruby>を する"], answer: "<ruby>長<rt>なが</rt></ruby>い <ruby>爪<rt>つめ</rt></ruby>のまま <ruby>仕事<rt>しごと</rt></ruby>を する", explanation: "<ruby>爪<rt>つめ</rt></ruby>は <ruby>短<rt>みじか</rt></ruby>く <ruby>切<rt>き</rt></ruby>ってください。アクセサリーも だめです。<ruby>安全<rt>あんぜん</rt></ruby>な <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>を <ruby>作<rt>つく</rt></ruby>るために <ruby>大切<rt>たいせつ</rt></ruby>です。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>2：<ruby>手<rt>て</rt></ruby>を <ruby>洗<rt>あら</rt></ruby>うとき、どこまで <ruby>洗<rt>あら</rt></ruby>いますか？", options: ["<ruby>指先<rt>ゆびさき</rt></ruby>だけ", "<ruby>手<rt>て</rt></ruby>のひらだけ", "<ruby>手首<rt>てくび</rt></ruby>まで", "<ruby>肘<rt>ひじ</rt></ruby>まで"], answer: "<ruby>手首<rt>てくび</rt></ruby>まで", explanation: "<ruby>石鹸<rt>せっけん</rt></ruby>を <ruby>使<rt>つか</rt></ruby>って、<ruby>指<rt>ゆび</rt></ruby>の <ruby>間<rt>あいだ</rt></ruby>や <ruby>爪<rt>つめ</rt></ruby>、<ruby>手首<rt>てくび</rt></ruby>まで しっかり <ruby>洗<rt>あら</rt></ruby>ってください。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>3：<ruby>仕事<rt>しごと</rt></ruby>の <ruby>前<rt>まえ</rt></ruby>に、<ruby>体<rt>からだ</rt></ruby>の <ruby>調子<rt>ちょうし</rt></ruby>が <ruby>悪<rt>わる</rt></ruby>いとき、どうしますか？", options: ["だまって <ruby>仕事<rt>しごと</rt></ruby>を はじめる", "<ruby>会社<rt>かいしゃ</rt></ruby>の <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>言<rt>い</rt></ruby>う", "<ruby>友達<rt>ともだち</rt></ruby>に <ruby>相談<rt>そうだん</rt></ruby>する", "<ruby>自分<rt>じぶん</rt></ruby>で <ruby>薬<rt>くすり</rt></ruby>を のむ"], answer: "<ruby>会社<rt>かいしゃ</rt></ruby>の <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>言<rt>い</rt></ruby>う", explanation: "<ruby>熱<rt>ねつ</rt></ruby>や <ruby>お腹<rt>なか</rt></ruby>の <ruby>痛<rt>いた</rt></ruby>み、けがが あるときは、かならず <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>してください。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>4：<ruby>仕事<rt>しごと</rt></ruby>の <ruby>途中<rt>とちゅう</rt></ruby>で、<ruby>床<rt>ゆか</rt></ruby>に <ruby>物<rt>もの</rt></ruby>を <ruby>落<rt>お</rt></ruby>としてしまいました。どうしますか？", options: ["ひろって、そのまま <ruby>使<rt>つか</rt></ruby>う", "だれにも <ruby>言<rt>い</rt></ruby>わずに、すてる", "<ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>言<rt>い</rt></ruby>う", "<ruby>足<rt>あし</rt></ruby>で けって、かくす"], answer: "<ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>言<rt>い</rt></ruby>う", explanation: "<ruby>床<rt>ゆか</rt></ruby>に <ruby>落<rt>お</rt></ruby>ちた <ruby>物<rt>もの</rt></ruby>は <ruby>汚<rt>きたな</rt></ruby>いです。ぜったいに <ruby>使<rt>つか</rt></ruby>わないで、<ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>してください。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>5：<ruby>仕事<rt>しごと</rt></ruby>の <ruby>途中<rt>とちゅう</rt></ruby>で トイレに <ruby>行<rt>い</rt></ruby>きたくなりました。<ruby>正<rt>ただ</rt></ruby>しいことは どれですか？", options: ["<ruby>仕事<rt>しごと</rt></ruby>の <ruby>服<rt>ふく</rt></ruby>のまま トイレに <ruby>行<rt>い</rt></ruby>く", "トイレの <ruby>後<rt>あと</rt></ruby>、<ruby>手<rt>て</rt></ruby>を <ruby>洗<rt>あら</rt></ruby>わずに <ruby>仕事<rt>しごと</rt></ruby>に <ruby>戻<rt>もど</rt></ruby>る", "トイレの <ruby>後<rt>あと</rt></ruby>、もう <ruby>一度<rt>いちど</rt></ruby>、<ruby>工場<rt>こうじょう</rt></ruby>に <ruby>入<rt>はい</rt></ruby>る <ruby>手順<rt>てじゅん</rt></ruby>を する", "<ruby>我慢<rt>がまん</rt></ruby>して <ruby>仕事<rt>しごと</rt></ruby>を <ruby>続<rt>つづ</rt></ruby>ける"], answer: "トイレの <ruby>後<rt>あと</rt></ruby>、もう <ruby>一度<rt>いちど</rt></ruby>、<ruby>工場<rt>こうじょう</rt></ruby>に <ruby>入<rt>はい</rt></ruby>る <ruby>手順<rt>てじゅん</rt></ruby>を する", explanation: "トイレの <ruby>後<rt>あと</rt></ruby>は、<ruby>必<rt>かなら</rt></ruby>ず <ruby>最初<rt>さいしょ</rt></ruby>と <ruby>同<rt>おな</rt></ruby>じように <ruby>手<rt>て</rt></ruby>を <ruby>洗<rt>あら</rt></ruby>い、<ruby>消毒<rt>しょうどく</rt></ruby>してから <ruby>仕事<rt>しごと</rt></ruby>に <ruby>戻<rt>もど</rt></ruby>ってください。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>6：<ruby>帽子<rt>ぼうし</rt></ruby>の <ruby>正<rt>ただ</rt></ruby>しい かぶり<ruby>方<rt>かた</rt></ruby>は どれですか？", options: ["<ruby>前髪<rt>まえがみ</rt></ruby>を <ruby>帽子<rt>ぼうし</rt></ruby>の <ruby>外<rt>そと</rt></ruby>に <ruby>出<rt>だ</rt></ruby>す", "<ruby>耳<rt>みみ</rt></ruby>が <ruby>全部<rt>ぜんぶ</rt></ruby> <ruby>隠<rt>かく</rt></ruby>れるように かぶる", "<ruby>髪<rt>かみ</rt></ruby>の<ruby>毛<rt>け</rt></ruby>が <ruby>全部<rt>ぜんぶ</rt></ruby> <ruby>帽子<rt>ぼうし</rt></ruby>の <ruby>中<rt>なか</rt></ruby>に <ruby>入<rt>はい</rt></ruby>るように かぶる", "かっこよく、すこし ななめに かぶる"], answer: "<ruby>髪<rt>かみ</rt></ruby>の<ruby>毛<rt>け</rt></ruby>が <ruby>全部<rt>ぜんぶ</rt></ruby> <ruby>帽子<rt>ぼうし</rt></ruby>の <ruby>中<rt>なか</rt></ruby>に <ruby>入<rt>はい</rt></ruby>るように かぶる", explanation: "<ruby>髪<rt>かみ</rt></ruby>の<ruby>毛<rt>け</rt></ruby>が 1<ruby>本<rt>ぽん</rt></ruby>でも <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>に <ruby>入<rt>はい</rt></ruby>ると <ruby>大変<rt>たいへん</rt></ruby>です。<ruby>前髪<rt>まえがみ</rt></ruby>も <ruby>後<rt>うし</rt></ruby>ろの <ruby>髪<rt>かみ</rt></ruby>も、<ruby>全部<rt>ぜんぶ</rt></ruby> <ruby>帽子<rt>ぼうし</rt></ruby>の <ruby>中<rt>なか</rt></ruby>に <ruby>入<rt>い</rt></ruby>れてください。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>7：<ruby>仕事着<rt>しごとぎ</rt></ruby>の <ruby>下<rt>した</rt></ruby>に <ruby>着<rt>き</rt></ruby>る <ruby>服<rt>ふく</rt></ruby>で <ruby>正<rt>ただ</rt></ruby>しいのはどれですか？", options: ["フードが <ruby>付<rt>つ</rt></ruby>いた パーカー", "<ruby>毛糸<rt>けいと</rt></ruby>の セーター", "<ruby>飾<rt>かざ</rt></ruby>りが たくさん <ruby>付<rt>つ</ins>いた シャツ", "<ruby>飾<rt>かざ</rt></ruby>りのない Tシャツ"], answer: "<ruby>飾<rt>かざ</rt></ruby>りのない Tシャツ", explanation: "<ruby>仕事着<rt>しごとぎ</rt></ruby>の <ruby>下<rt>した</rt></ruby>に <ruby>着<rt>き</rt></ruby>る <ruby>服<rt>ふく</rt></ruby>は、<ruby>飾<rt>かざ</rt></ruby>りがなく、<ruby>毛<rt>け</rt></ruby>が <ruby>出<rt>で</rt></ruby>ないものが いいです。フードも <ruby>出<rt>だ</rt></ruby>してはいけません。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>8：<ruby>仕事<rt>しごと</rt></ruby>の <ruby>場所<rt>ばしょ</rt></ruby>に <ruby>持<rt>も</rt></ruby>って <ruby>入<rt>はい</rt></ruby>ってはいけないものは どれですか？", options: ["<ruby>会社<rt>かいしゃ</rt></ruby>の バインダーと ボールペンのセット", "<ruby>生産日報<rt>せいさんにっぽう</rt></ruby>", "<ruby>自分<rt>じぶん</rt></ruby>の スマートフォン", "<ruby>会社<rt>かいしゃ</rt></ruby>の <ruby>道具<rt>どうぐ</rt></ruby>"], answer: "<ruby>自分<rt>じぶん</rt></ruby>の スマートフォン", explanation: "スマートフォンなどの <ruby>私物<rt>しぶつ</rt></ruby>は、<ruby>仕事<rt>しごと</rt></ruby>の <ruby>場所<rt>ばしょ</rt></ruby>に <ruby>持<rt>も</rt></ruby>ち<ruby>込<rt>こ</rt></ruby>んではいけません。<ruby>決<rt>き</rt></ruby>められた ロッカーに <ruby>置<rt>お</rt></ruby>きましょう。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>9：<ruby>マスク<rt>ますく</rt></ruby>の <ruby>正<rt>ただ</rt></ruby>しい つけ<ruby>方<rt>かた</rt></ruby>は どれですか？", options: ["<ruby>鼻<rt>はな</rt></ruby>と <ruby>口<rt>くち</rt></ruby>を しっかり <ruby>隠<rt>かく</rt></ruby>す", "<ruby>鼻<rt>はな</rt></ruby>だけ <ruby>出<rt>だ</rt></ruby>す", "あごに かける", "ときどき <ruby>外<rt>はず</rt></ruby>して <ruby>話<rt>はな</rt></ruby>す"], answer: "<ruby>鼻<rt>はな</rt></ruby>と <ruby>口<rt>くち</rt></ruby>を しっかり <ruby>隠<rt>かく</rt></ruby>す", explanation: "マスクは、<ruby>鼻<rt>はな</rt></ruby>と <ruby>口<rt>くち</rt></ruby>の <ruby>両方<rt>りょうほう</rt></ruby>を すきまなく <ruby>隠<rt>かく</rt></ruby>すことが <ruby>大切<rt>たいせつ</rt></ruby>です。つばが <ruby>飛<rt>と</rt></ruby>ぶのを <ruby>防<rt>ふせ</rt></ruby>ぎます。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>10：<ruby>手<rt>て</rt></ruby>に けがを したとき、どうしますか？", options: ["だれにも <ruby>言<rt>い</rt></ruby>わない", "<ruby>自分<rt>じぶん</rt></ruby>で バンドエイドを <ruby>貼<rt>は</rt></ruby>る", "<ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>して、<ruby>手当<rt>てあて</rt></ruby>をしてもらう", "<ruby>血<rt>ち</rt></ruby>が <ruby>止<rt>と</rt></ruby>まるまで <ruby>休<rt>やす</rt></ruby>む"], answer: "<ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>して、<ruby>手当<rt>てあて</rt></ruby>をしてもらう", explanation: "どんなに <ruby>小<rt>ちい</rt></ruby>さな けがでも、かならず <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>してください。<ruby>血<rt>ち</rt></ruby>が <ruby>食品<rt>しょくひん</rt></ruby>に <ruby>入<rt>はい</rt></ruby>るのを <ruby>防<rt>ふせ</rt></ruby>ぎます。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>11：<ruby>床<rt>ゆか</rt></ruby>が <ruby>水<rt>みず</rt></ruby>で ぬれているとき、どうしますか？", options: ["そのまま <ruby>歩<rt>ある</rt></ruby>く", "すぐに <ruby>水<rt>みず</rt></ruby>を ふきとって、<ruby>近<rt>ちか</rt></ruby>くの <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する", "<ruby>自分<rt>じぶん</rt></ruby>で ふくだけで <ruby>終<rt>お</rt></ruby>わりにする", "<ruby>見<rt>み</rt></ruby>なかったことにする"], answer: "すぐに <ruby>水<rt>みず</rt></ruby>を ふきとって、<ruby>近<rt>ちか</rt></ruby>くの <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する", explanation: "<ruby>濡<rt>ぬ</rt></ruby>れた <ruby>床<rt>ゆか</rt></ruby>は <ruby>滑<rt>すべ</rt></ruby>りやすく <ruby>危険<rt>きけん</rt></ruby>です。<ruby>自分<rt>じぶん</rt></ruby>で ふき、<ruby>他<rt>ほか</rt></ruby>の <ruby>人<rt>ひと</rt></ruby>にも <ruby>危険<rt>きけん</rt></ruby>を <ruby>知<rt>し</rt></ruby>らせるために <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>しましょう。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>12：<ruby>重<rt>おも</rt></ruby>い <ruby>物<rt>もの</rt></ruby>を <ruby>持<rt>も</rt></ruby>ち<ruby>上<rt>あ</rt></ruby>げるときの <ruby>正<rt>ただ</rt></ruby>しい <ruby>姿勢<rt>しせい</rt></ruby>は どれですか？", options: ["<ruby>腰<rt>こし</rt></ruby>だけ <ruby>曲<rt>ま</rt></ruby>げて <ruby>持<rt>も</rt></ruby>つ", "<ruby>膝<rt>ひざ</rt></ruby>を <ruby>曲<rt>ま</rt></ruby>げて <ruby>腰<rt>こし</rt></ruby>を <ruby>下<rt>お</rt></ruby>ろして <ruby>持<rt>も</rt></ruby>つ", "<ruby>腕<rt>うで</rt></ruby>の <ruby>力<rt>ちから</rt></ruby>だけで <ruby>持<rt>も</rt></ruby>つ", "できるだけ <ruby>遠<rt>とお</rt></ruby>くから <ruby>体<rt>からだ</rt></ruby>を <ruby>伸<rt>の</rt></ruby>ばして <ruby>持<rt>も</rt></ruby>つ"], answer: "<ruby>膝<rt>ひざ</rt></ruby>を <ruby>曲<rt>ま</rt></ruby>げて <ruby>腰<rt>こし</rt></ruby>を <ruby>下<rt>お</rt></ruby>ろして <ruby>持<rt>も</rt></ruby>つ", explanation: "<ruby>腰<rt>こし</rt></ruby>を <ruby>痛<rt>いた</rt></ruby>めないように、<ruby>膝<rt>ひざ</rt></ruby>をしっかり <ruby>曲<rt>ま</rt></ruby>げて、<ruby>物<rt>もの</rt></ruby>を <ruby>体<rt>からだ</rt></ruby>に <ruby>近<rt>ちか</rt></ruby>づけて <ruby>持<rt>も</rt></ruby>ちましょう。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>13：<ruby>機械<rt>きかい</rt></ruby>の <ruby>中<rt>なか</rt></ruby>に <ruby>物<rt>もの</rt></ruby>が つまりました。どうしますか？", options: ["<ruby>手<rt>て</rt></ruby>を <ruby>入<rt>い</rt></ruby>れて とる", "<ruby>機械<rt>きかい</rt></ruby>を <ruby>止<rt>と</rt></ruby>めずに <ruby>棒<rt>ぼう</rt></ruby>で とる", "<ruby>必<rt>かなら</rt></ruby>ず <ruby>機械<rt>きかい</rt></ruby>を <ruby>止<rt>と</rt></ruby>めてから、<ruby>責任者<rt>せきにんしゃ</rt></ruby>を <ruby>呼<rt>よ</rt></ruby>ぶ", "そのままにしておく"], answer: "<ruby>必<rt>かなら</rt></ruby>ず <ruby>機械<rt>きかい</rt></ruby>を <ruby>止<rt>と</rt></ruby>めてから、<ruby>責任者<rt>せきにんしゃ</rt></ruby>を <ruby>呼<rt>よ</rt></ruby>ぶ", explanation: "<ruby>機械<rt>きかい</rt></ruby>が <ruby>動<rt>うご</rt></ruby>いているときに <ruby>手<rt>て</rt></ruby>を <ruby>入<rt>い</rt></ruby>れると、<ruby>大<rt>おお</rt></ruby>けがをします。<ruby>必<rt>かなら</rt></ruby>ず <ruby>電源<rt>でんげん</rt></ruby>を <ruby>切<rt>き</rt></ruby>って、<ruby>自分<rt>じぶん</rt></ruby>で <ruby>触<rt>さわ</rt></ruby>らずに <ruby>責任者<rt>せきにんしゃ</rt></ruby>を <ruby>呼<rt>よ</rt></ruby>んでください。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>14：<ruby>ナイフ<rt>ないふ</rt></ruby>（<ruby>包丁<rt>ほうちょう</rt></ruby>）を <ruby>使<rt>つか</rt></ruby>うとき、<ruby>危<rt>あぶ</rt></ruby>ないことは どれですか？", options: ["<ruby>切<rt>き</rt></ruby>れないナイフを <ruby>使<rt>つか</rt></ruby>う", "<ruby>手<rt>て</rt></ruby>に <ruby>合<rt>あ</rt></ruby>った <ruby>大<rt>おお</rt></ruby>きさのナイフを <ruby>使<rt>つか</rt></ruby>う", "<ruby>滑<rt>すべ</rt></ruby>らない <ruby>場所<rt>ばしょ</rt></ruby>で <ruby>使<rt>つか</rt></ruby>う", "<ruby>使<rt>つか</rt></ruby>い<ruby>終<rt>お</rt></ruby>わったら すぐに <ruby>片付<rt>かたづ</rt></ruby>ける"], answer: "<ruby>切<rt>き</rt></ruby>れないナイフを <ruby>使<rt>つか</rt></ruby>う", explanation: "<ruby>切<rt>き</rt></ruby>れないナイフは、<ruby>余計<rt>よけい</rt></ruby>な <ruby>力<rt>ちから</rt></ruby>が <ruby>入<rt>はい</rt></ruby>って <ruby>滑<rt>すべ</rt></ruby>りやすく、とても <ruby>危険<rt>きけん</rt></ruby>です。<ruby>よく<rt>よく</rt></ruby> <ruby>切<rt>き</rt></ruby>れるナイフを <ruby>正<rt>ただ</rt></ruby>しく <ruby>使<rt>つか</rt></ruby>いましょう。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>15：<ruby>工場<rt>こうじょう</rt></ruby>の <ruby>中<rt>なか</rt></ruby>で、してはいけないことは どれですか？", options: ["ゆっくり <ruby>歩<rt>ある</rt></ruby>く", "<ruby>周<rt>まわ</rt></ruby>りを よく <ruby>見<rt>み</rt></ruby>る", "<ruby>走<rt>はし</rt></ruby>る", "<ruby>挨拶<rt>あいさつ</rt></ruby>をする"], answer: "<ruby>走<rt>はし</rt></ruby>る", explanation: "<ruby>工場<rt>こうじょう</rt></ruby>の <ruby>中<rt>なか</rt></ruby>では <ruby>絶対<rt>ぜったい</rt></ruby>に <ruby>走<rt>はし</rt></ruby>ってはいけません。<ruby>人<rt>ひと</rt></ruby>や <ruby>物<rt>もの</rt></ruby>に ぶつかったり、<ruby>転<rt>ころ</rt></ruby>んだりして <ruby>危険<rt>きけん</rt></ruby>です。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>16：<ruby>洗剤<rt>せんざい</rt></ruby>や <ruby>消毒液<rt>しょうどくえき</rt></ruby>を <ruby>使<rt>つか</rt></ruby>うとき、<ruby>一番<rt>いちばん</rt></ruby> <ruby>大切<rt>たいせつ</rt></ruby>なことは <ruby>何<rt>なん</rt></ruby>ですか？", options: ["<ruby>種類<rt>しゅるい</rt></ruby>の <ruby>違<rt>ちが</rt></ruby>うものを <ruby>混<rt>ま</rt></ruby>ぜて <ruby>使<rt>つか</rt></ruby>う", "<ruby>目<rt>め</rt></ruby>や <ruby>皮膚<rt>ひふ</rt></ruby>に つかないように <ruby>保護具<rt>ほごぐ</rt></ruby>（<ruby>手袋<rt>てぶくろ</rt></ruby>やゴーグル）を <ruby>使<rt>つか</rt></ruby>う", "<ruby>使<rt>つか</rt></ruby>う<ruby>前<rt>まえ</rt></ruby>に <ruby>匂<rt>にお</rt></ruby>いを かぐ", "<ruby>素手<rt>すで</rt></ruby>で <ruby>使<rt>つか</rt></ruby>う"], answer: "<ruby>目<rt>め</rt></ruby>や <ruby>皮膚<rt>ひふ</rt></ruby>に つかないように <ruby>保護具<rt>ほごぐ</rt></ruby>（<ruby>手袋<rt>てぶくろ</rt></ruby>やゴーグル）を <ruby>使<rt>つか</rt></ruby>う", explanation: "<ruby>薬品<rt>やくひん</rt></ruby>は <ruby>体<rt>からだ</rt></ruby>に <ruby>悪<rt>わる</rt></ruby>い <ruby>影響<rt>えいきょう</rt></ruby>が あるかもしれません。<ruby>必<rt>かなら</rt></ruby>ず ルールを <ruby>守<rt>まも</rt></ruby>り、<ruby>手袋<rt>てぶくろ</rt></ruby>や ゴーグルなどの <ruby>保護具<rt>ほごぐ</rt></ruby>を <ruby>使<rt>つか</rt></ruby>ってください。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>17：<ruby>非常口<rt>ひじょうぐち</rt></ruby>の <ruby>前<rt>まえ</rt></ruby>に <ruby>物<rt>もの</rt></ruby>を <ruby>置<rt>お</rt></ruby>いては いけないのは なぜですか？", options: ["<ruby>見<rt>み</rt></ruby>た<ruby>目<rt>め</rt></ruby>が <ruby>悪<rt>わる</rt></ruby>いから", "<ruby>掃除<rt>そうじ</rt></ruby>が しにくいから", "<ruby>火事<rt>かじ</rt></ruby>や <ruby>地震<rt>じしん</rt></ruby>のとき、<ruby>逃<rt>に</rt></ruby>げられなくなるから", "<ruby>物<rt>もの</rt></ruby>が <ruby>壊<rt>こわ</rt></ruby>れるから"], answer: "<ruby>火事<rt>かじ</rt></ruby>や <ruby>地震<rt>じしん</rt></ruby>のとき、<ruby>逃<rt>に</rt></ruby>げられなくなるから", explanation: "<ruby>非常口<rt>ひじょうぐち</rt></ruby>は、<ruby>緊急時<rt>きんきゅうじ</rt></ruby>に <ruby>命<rt>いのち</rt></ruby>を <ruby>守<rt>まも</rt></ruby>るための <ruby>大切<rt>たいせつ</rt></ruby>な <ruby>出口<rt>でぐち</rt></ruby>です。いつでも <ruby>通<rt>とお</rt></ruby>れるように、<ruby>絶対<rt>ぜったい</rt></ruby>に <ruby>物<rt>もの</rt></ruby>を <ruby>置<rt>お</rt></ruby>かないでください。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>18：<ruby>火事<rt>かじ</rt></ruby>を <ruby>見<rt>み</rt></ruby>つけたら、<ruby>最初<rt>さいしょ</rt></ruby>に 何をしますか？", options: ["<ruby>自分<rt>じぶん</rt></ruby>ひとりで <ruby>消火器<rt>しょうかき</rt></ruby>を <ruby>探<rt>さが</rt></ruby>す", "すぐに <ruby>建物<rt>たてもの</rt></ruby>の <ruby>外<rt>そと</rt></ruby>へ <ruby>逃<rt>に</rt></ruby>げる", "<ruby>大<rt>おお</rt></ruby>きな <ruby>声<rt>こえ</rt></ruby>で まわりに しらせて、すぐに <ruby>事務所<rt>じむしょ</rt></ruby>か <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する", "スマートフォンで <ruby>写真<rt>しゃしん</rt></ruby>を とる"], answer: "<ruby>大<rt>おお</rt></ruby>きな <ruby>声<rt>こえ</rt></ruby>で まわりに しらせて、すぐに <ruby>事務所<rt>じむしょ</rt></ruby>か <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する", explanation: "まず <ruby>周<rt>まわ</rt></ruby>りの <ruby>人<rt>ひと</rt></ruby>に <ruby>危険<rt>きけん</rt></ruby>を <ruby>知<rt>し</rt></ruby>らせ、<ruby>同時<rt>どうじ</rt></ruby>に <ruby>責任者<rt>せきにんしゃ</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>することが <ruby>一番<rt>いちばん</rt></ruby> <ruby>大切<rt>たいせつ</rt></ruby>です。その<ruby>後<rt>あと</rt></ruby>、<ruby>指示<rt>しじ</rt></ruby>に <ruby>従<rt>したが</rt></ruby>って <ruby>行動<rt>こうどう</rt></ruby>します。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>19：<ruby>熱<rt>あつ</rt></ruby>い <ruby>鍋<rt>なべ</rt></ruby>や <ruby>お湯<rt>ゆ</rt></ruby>を <ruby>扱<rt>あつか</rt></ruby>うとき、<ruby>何<rt>なに</rt></ruby>に <ruby>気<rt>き</rt></ruby>をつけますか？", options: ["<ruby>素手<rt>すで</rt></ruby>で <ruby>触<rt>さわ</rt></ruby>る", "<ruby>周<rt>まわ</rt></ruby>りに <ruby>人<rt>ひと</rt></ruby>がいるか <ruby>確認<rt>かくにん</rt></ruby>せずに <ruby>運<rt>はこ</rt></ruby>ぶ", "<ruby>やけどをしないように、<ruby>保護具<rt>ほごぐ</rt></ruby>（<ruby>手袋<rt>てぶくろ</rt></ruby>など）を <ruby>使<rt>つか</rt></ruby>う", "<ruby>急<rt>いそ</rt></ruby>いで <ruby>運<rt>はこ</rt></ruby>ぶ"], answer: "<ruby>やけどをしないように、<ruby>保護具<rt>ほごぐ</rt></ruby>（<ruby>手袋<rt>てぶくろ</rt></ruby>など）を <ruby>使<rt>つか</rt></ruby>う", explanation: "<ruby>やけどは<rt>やけどは</rt></ruby> <ruby>大変<rt>たいへん</rt></ruby>な けがに なります。<ruby>熱<rt>あつ</rt></ruby>いものを <ruby>扱<rt>あつか</rt></ruby>うときは、<ruby>必<rt>かなら</rt></ruby>ず <ruby>保護具<rt>ほごぐ</rt></ruby>を <ruby>使<rt>つか</rt></ruby>い、<ruby>周<rt>まわ</rt></ruby>りに <ruby>声<rt>こえ</rt></ruby>をかけて <ruby>注意<rt>ちゅうい</rt></ruby>しましょう。" },
+            { question: "<ruby>問<rt>とい</rt></ruby>20：「5S」の <ruby>活動<rt>かつどう</rt></ruby>は <ruby>何<rt>なん</rt></ruby>のために しますか？", options: ["<ruby>仕事<rt>しごと</rt></ruby>を <ruby>難<rt>むずか</rt></ruby>しくするため", "<ruby>時間<rt>じかん</rt></ruby>をかけるため", "<ruby>工場<rt>こうじょう</rt></ruby>を きれいで <ruby>安全<rt>あんぜん</rt></ruby>な <ruby>場所<rt>ばしょ</rt></ruby>にするため", "リーダーだけがやること"], answer: "<ruby>工場<rt>こうじょう</rt></ruby>を きれいで <ruby>安全<rt>あんぜん</rt></ruby>な <ruby>場所<rt>ばしょ</rt></ruby>にするため", explanation: "5S（<ruby>整理<rt>せいり</rt></ruby>・<ruby>整頓<rt>せいとん</rt></ruby>・<ruby>清掃<rt>せいそう</rt></ruby>・<ruby>清潔<rt>せいけつ</rt></ruby>・<ruby>躾<rt>しつけ</rt></ruby>）は、みんなで <ruby>働<rt>はたら</rt></ruby>きやすい <ruby>職場<rt>しょくば</rt></ruby>を <ruby>作<rt>つく</rt></ruby>るための <ruby>大切<rt>たいせつ</rt></ruby>な <ruby>活動<rt>かつどう</rt></ruby>です。" }
+        ];
+
+        // --- 変数定義 ---
+        let userName = '';
+        let testCount = 0;
+        let scoreHistory = [];
+
+        // --- DOM要素取得 ---
+        const startContainer = document.getElementById('start-container');
+        const nameInput = document.getElementById('name-input');
+        const nameError = document.getElementById('name-error');
+        const startBtn = document.getElementById('start-btn');
+        const quizWrapper = document.getElementById('quiz-wrapper');
+        const headerSubtitle = document.getElementById('header-subtitle');
+        const quizContainer = document.getElementById('quiz-container');
+        const submitContainer = document.getElementById('submit-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreEl = document.getElementById('score');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const feedbackMessageEl = document.getElementById('feedback-message');
+        const retakeBtn = document.getElementById('retake-btn');
+        const reportBtn = document.getElementById('report-btn');
+        const encourageMessage = document.getElementById('encourage-message');
+        const successContainer = document.getElementById('success-container');
+        const successMessage = document.getElementById('success-message');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // --- 関数 ---
+        function renderQuiz() {
+            quizContainer.innerHTML = '';
+            quizData.forEach((quizItem, index) => {
+                const questionEl = document.createElement('div');
+                questionEl.className = 'question-block';
+                const optionsHtml = quizItem.options.map(option => `
+                    <label class="quiz-option block p-4 border border-gray-200 rounded-lg cursor-pointer transition-colors duration-200 text-lg">
+                        <input type="radio" name="question${index}" value="${option}" class="mr-3 transform scale-125">
+                        ${option}
+                    </label>
+                `).join('');
+                questionEl.innerHTML = `<p class="text-xl font-semibold mb-4">${quizItem.question}</p><div class="space-y-3">${optionsHtml}</div>`;
+                quizContainer.appendChild(questionEl);
+            });
+        }
+
+        function showResults() {
+            const answers = [];
+            const questionBlocks = document.querySelectorAll('.question-block');
+            questionBlocks.forEach((block, index) => {
+                const selectedOption = block.querySelector(`input[name="question${index}"]:checked`);
+                answers.push(selectedOption ? selectedOption.value : null);
+            });
+
+            let score = 0;
+            feedbackContainer.innerHTML = '';
+            quizData.forEach((quizItem, index) => {
+                const isCorrect = answers[index] === quizItem.answer;
+                if (isCorrect) { score++; }
+                const feedbackEl = document.createElement('div');
+                feedbackEl.className = `p-4 border-l-4 rounded-r-lg ${isCorrect ? 'correct' : 'incorrect'}`;
+                let feedbackHtml = `<p class="font-bold text-lg">${quizItem.question}</p><p class="mt-2"><strong class="font-semibold"><ruby>あなた<rt>あなた</rt></ruby>の <ruby>回答<rt>かいとう</rt></ruby>：</strong><span class="font-medium">${answers[index] || '<ruby>未回答<rt>みかいとう</rt></ruby>'}</span></p>`;
+                if (!isCorrect) {
+                    feedbackHtml += `<p class="mt-1"><strong class="font-semibold"><ruby>正<rt>ただ</rt></ruby>しい <ruby>答<rt>こた</rt></ruby>え：</strong><span class="font-medium">${quizItem.answer}</span></p>`;
+                }
+                feedbackHtml += `<p class="mt-3 explanation"><strong class="font-semibold"><ruby>説明<rt>せつめい</rt></ruby>：</strong>${quizItem.explanation}</p>`;
+                feedbackEl.innerHTML = feedbackHtml;
+                feedbackContainer.appendChild(feedbackEl);
+            });
+            
+            scoreHistory.push(score);
+            const totalPoints = score * 5; // 1問5点
+            scoreEl.innerHTML = `${totalPoints}<ruby>点<rt>てん</rt></ruby> / 100<ruby>点<rt>てん</rt></ruby>`;
+            
+            let message = '';
+            let messageBgColor = '';
+            if (totalPoints <= 25) { message = 'まずは <ruby>基本<rt>きほん</rt></ruby>から！もう<ruby>一度<rt>いちど</rt></ruby> ビデオを <ruby>見<rt>み</rt></ruby>て、<ruby>復習<rt>ふくしゅう</rt></ruby>しましょう。'; messageBgColor = 'bg-red-100'; } 
+            else if (totalPoints <= 50) { message = 'おしい！<ruby>大切<rt>たいせつ</rt></ruby>な ルールは <ruby>覚<rt>おぼ</rt></ruby>えられています。あと <ruby>半分<rt>はんぶん</rt></ruby>です！'; messageBgColor = 'bg-yellow-100'; } 
+            else if (totalPoints <= 75) { message = 'すばらしい！かなり <ruby>理解<rt>りかい</rt></ruby>できていますね。この <ruby>調子<rt>ちょうし</rt></ruby>です！'; messageBgColor = 'bg-blue-100'; } 
+            else if (totalPoints <= 99) { message = 'すごい！ほとんど <ruby>完璧<rt>かんぺき</rt></ruby>です。<ruby>安全<rt>あんぜん</rt></ruby>・<ruby>衛生<rt>えいせい</rt></ruby>の リーダーに なれますね！'; messageBgColor = 'bg-sky-100'; } 
+            else { message = '<ruby>満点<rt>まんてん</rt></ruby>です！あなたは <ruby>安全<rt>あんぜん</rt></ruby>と <ruby>衛生<rt>えいせい</rt></ruby>の プロフェッショナルです！'; messageBgColor = 'bg-green-100'; }
+            feedbackMessageEl.innerHTML = message;
+            feedbackMessageEl.className = `text-center text-lg font-semibold mb-6 p-3 rounded-lg ${messageBgColor}`;
+
+            submitContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (totalPoints === 100) {
+                reportBtn.classList.remove('hidden');
+                encourageMessage.classList.add('hidden');
+            } else {
+                reportBtn.classList.add('hidden');
+                encourageMessage.classList.remove('hidden');
+            }
+        }
+        
+        function resetTest() {
+            userName = '';
+            testCount = 0;
+            scoreHistory = [];
+            
+            nameInput.value = '';
+            successContainer.classList.add('hidden');
+            quizWrapper.classList.add('hidden');
+            resultsContainer.classList.add('hidden');
+            startContainer.classList.remove('hidden');
+            headerSubtitle.innerHTML = `<ruby>安全<rt>あんぜん</rt></ruby>な <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>を <ruby>作<rt>つく</rt></ruby>るための ルールを <ruby>確認<rt>かくにん</rt></ruby>しましょう。`;
+        }
+
+        // --- イベントリスナー ---
+        startBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            if (name === '') {
+                nameError.textContent = 'なまえを いれてください';
+                nameInput.classList.add('border-red-500');
+                return;
+            }
+            userName = name;
+            nameError.textContent = '';
+            nameInput.classList.remove('border-red-500');
+            
+            testCount++;
+            startContainer.classList.add('hidden');
+            quizWrapper.classList.remove('hidden');
+            submitContainer.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+            headerSubtitle.innerHTML = `ようこそ、<strong>${userName}</strong>さん！ ${testCount}<ruby>回目<rt>かいめ</rt></ruby>の テストです。`;
+            renderQuiz();
+        });
+
+        submitBtn.addEventListener('click', showResults);
+
+        retakeBtn.addEventListener('click', () => {
+            testCount++;
+            resultsContainer.classList.add('hidden');
+            submitContainer.classList.remove('hidden');
+            headerSubtitle.innerHTML = `ようこそ、<strong>${userName}</strong>さん！ ${testCount}<ruby>回目<rt>かいめ</rt></ruby>の テストです。`;
+            quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            renderQuiz();
+        });
+
+        reportBtn.addEventListener('click', async () => {
+            reportBtn.disabled = true;
+            reportBtn.innerHTML = '送信中...';
+
+            const subject = `安全・衛生テスト 100点達成報告（${userName} 様）`;
+            let body = `${userName}さんが、安全・衛生テストで100点をとりました。\n\n`;
+            body += `テスト受験回数：${testCount}回\n`;
+            body += '--- 点数履歴 ---\n';
+            scoreHistory.forEach((score, index) => {
+                body += `${index + 1}回目： ${score * 5}点\n`;
+            });
+            body += '----------------\n\n';
+            body += '確認いたしました。';
+
+            const formData = new FormData();
+            formData.append('_subject', subject);
+            formData.append('message', body);
+            formData.append('受験者', userName);
+            formData.append('受験回数', testCount);
+
+            try {
+                const response = await fetch('https://formsubmit.co/ajax/h-kakui@kakui-food.com', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    quizWrapper.classList.add('hidden');
+                    successContainer.classList.remove('hidden');
+                    successMessage.innerHTML = `${userName}さん、<strong class="text-blue-600">${testCount}<ruby>回目<rt>かいめ</rt></ruby>のテストで<ruby>合格<rt>ごうかく</rt></ruby>しました！</strong><br><ruby>報告<rt>ほうこく</rt></ruby>メールを <ruby>送信<rt>そうしん</rt></ruby>しました。<br>おつかれさまでした！`;
+                } else {
+                    throw new Error('メール送信に失敗しました。');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('メールの送信に失敗しました。お手数ですが、もう一度お試しいただくか、部長に直接ご報告ください。');
+                reportBtn.disabled = false;
+                reportBtn.innerHTML = '<ruby>角井部長<rt>かく いぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する';
+            }
+        });
+        
+        restartBtn.addEventListener('click', resetTest);
+
+    </script>
+</body>
+</html>

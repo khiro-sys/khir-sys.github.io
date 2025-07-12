@@ -83,9 +83,6 @@
                      
                      <div class="flex items-center justify-center gap-4 mb-4">
                         <p id="score" class="text-center text-3xl font-bold"></p>
-                        <button id="report-btn" class="hidden bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50">
-                            <ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する
-                        </button>
                      </div>
 
                      <p id="feedback-message" class="text-center text-lg font-semibold my-6 p-3 rounded-lg"></p>
@@ -94,15 +91,37 @@
                          <!-- 各問題のフィードバックはここに挿入されます -->
                      </div>
                      
-                     <div id="retake-actions" class="hidden mt-8 text-center">
-                        <button id="retake-btn" class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 transform hover:scale-105">
-                            もう<ruby>一度<rt>いちど</rt></ruby>テストする
+                     <div class="mt-8 text-center">
+                        <button id="report-trigger-btn" class="hidden bg-red-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50">
+                            <ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する
                         </button>
-                        <p id="encourage-message" class="text-gray-600 font-semibold mt-2">100<ruby>点<rt>てん</rt></ruby> とるまで がんばって！</p>
+                        <div id="retake-actions" class="hidden flex flex-col items-center gap-2">
+                            <button id="retake-btn" class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 transform hover:scale-105">
+                                もう<ruby>一度<rt>いちど</rt></ruby>テストする
+                            </button>
+                            <p id="encourage-message" class="text-gray-600 font-semibold mt-2">100<ruby>点<rt>てん</rt></ruby> とるまで がんばって！</p>
+                        </div>
                      </div>
                 </div>
             </div>
             
+            <!-- 報告用サマリー画面 -->
+            <div id="report-summary-container" class="hidden bg-white p-8 md:p-12 rounded-xl shadow-lg text-center">
+                <h2 class="text-2xl font-bold text-gray-800"><ruby>合格<rt>ごうかく</rt></ruby> おめでとう！</h2>
+                <div class="my-6 text-lg space-y-2">
+                    <p><strong class="font-semibold">なまえ：</strong> <span id="summary-name"></span></p>
+                    <p><strong class="font-semibold">てんすう：</strong> <span id="summary-score" class="text-red-500 font-bold">100点</span></p>
+                    <p><strong class="font-semibold">かいすう：</strong> <span id="summary-attempts"></span><ruby>回目<rt>かいめ</rt></ruby>で <ruby>合格<rt>ごうかく</rt></ruby></p>
+                </div>
+                <p class="text-gray-600 mb-4"><ruby>下<rt>した</rt></ruby>の ボタンを <ruby>押<rt>お</rt></ruby>して、この <ruby>画面<rt>がめん</rt></ruby>を <ruby>部長<rt>ぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>してください。</p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button id="share-btn" class="bg-red-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50">
+                        <ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する
+                    </button>
+                    <p class="text-sm text-gray-500"><ruby>共有画面<rt>きょうゆうがめん</rt></ruby>が <ruby>立<rt>た</rt></ruby>ち<ruby>上<rt>あ</rt></ruby>がるので<br>Messengerで <ruby>送<rt>おく</rt></ruby>ってください</p>
+                </div>
+            </div>
+
             <!-- 報告完了画面 -->
             <div id="success-container" class="hidden bg-white p-8 md:p-12 rounded-xl shadow-lg text-center">
                 <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,12 +183,16 @@
         const feedbackContainer = document.getElementById('feedback-container');
         const feedbackMessageEl = document.getElementById('feedback-message');
         const retakeBtn = document.getElementById('retake-btn');
-        const recordBtn = document.getElementById('report-btn');
+        const reportTriggerBtn = document.getElementById('report-trigger-btn');
         const encourageMessage = document.getElementById('encourage-message');
         const successContainer = document.getElementById('success-container');
         const successMessage = document.getElementById('success-message');
         const restartBtn = document.getElementById('restart-btn');
         const retakeActions = document.getElementById('retake-actions');
+        const reportSummaryContainer = document.getElementById('report-summary-container');
+        const summaryName = document.getElementById('summary-name');
+        const summaryAttempts = document.getElementById('summary-attempts');
+        const shareBtn = document.getElementById('share-btn');
         
         // --- 関数 ---
 
@@ -250,10 +273,10 @@
             resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             if (totalPoints === 100) {
-                recordBtn.classList.remove('hidden');
+                reportTriggerBtn.classList.remove('hidden');
                 retakeActions.classList.add('hidden');
             } else {
-                recordBtn.classList.add('hidden');
+                reportTriggerBtn.classList.add('hidden');
                 retakeActions.classList.remove('hidden');
             }
         }
@@ -267,11 +290,12 @@
             successContainer.classList.add('hidden');
             quizWrapper.classList.add('hidden');
             resultsContainer.classList.add('hidden');
+            reportSummaryContainer.classList.add('hidden');
             startContainer.classList.remove('hidden');
             headerSubtitle.innerHTML = `<ruby>安全<rt>あんぜん</rt></ruby>な <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>を <ruby>作<rt>つく</rt></ruby>るための ルールを <ruby>確認<rt>かくにん</rt></ruby>しましょう。`;
             
-            recordBtn.disabled = false;
-            recordBtn.innerHTML = '<ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する';
+            reportTriggerBtn.disabled = false;
+            reportTriggerBtn.innerHTML = '<ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する';
         }
 
         // --- イベントリスナー ---
@@ -306,12 +330,22 @@
             renderQuiz();
         });
 
-        recordBtn.addEventListener('click', async () => {
-            recordBtn.disabled = true;
-            recordBtn.innerHTML = '報告準備中...';
+        reportTriggerBtn.addEventListener('click', () => {
+            summaryName.textContent = userName;
+            summaryAttempts.textContent = testCount;
+            quizWrapper.classList.add('hidden');
+            reportSummaryContainer.classList.remove('hidden');
+        });
+        
+        shareBtn.addEventListener('click', async () => {
+            shareBtn.disabled = true;
+            shareBtn.innerHTML = '報告準備中...';
 
             try {
-                const canvas = await html2canvas(resultsContainer);
+                const canvas = await html2canvas(reportSummaryContainer, {
+                    backgroundColor: '#f9fafb', // bodyの背景色に合わせる
+                    scale: 2
+                });
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
                 const file = new File([blob], `テスト結果_${userName}.png`, { type: 'image/png' });
 
@@ -322,7 +356,7 @@
                         text: `【テスト結果】${userName}さんが100点をとりました！`
                     });
                     
-                    quizWrapper.classList.add('hidden');
+                    reportSummaryContainer.classList.add('hidden');
                     successContainer.classList.remove('hidden');
                     successMessage.innerHTML = `<ruby>報告<rt>ほうこく</rt></ruby>が<ruby>完了<rt>かんりょう</rt></ruby>しました。<br>おつかれさまでした！`;
 
@@ -333,8 +367,8 @@
                 console.error('Share failed:', error);
                 // 共有がキャンセルされた場合などは、何もしない
             } finally {
-                recordBtn.disabled = false;
-                recordBtn.innerHTML = '<ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する';
+                shareBtn.disabled = false;
+                shareBtn.innerHTML = '<ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する';
             }
         });
         

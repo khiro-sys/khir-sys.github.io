@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角井食品 動画マニュアル</title>
+    <!-- Tailwind CSSを読み込みます -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Googleフォント 'Inter' を読み込みます */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        /* フォント設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+
+        /* アコーディオンのコンテンツ部分のスタイル */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.1s ease-out;
+        }
+        
+        /* アイコンのスタイル */
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+
+        /* アコーディオンが開いているときのアイコンのスタイル */
+        .accordion-button.open .accordion-icon {
+            transform: rotate(90deg);
+        }
+
+        /* ログイン画面のスタイル */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        #main-content {
+            display: none; /* 初期状態では非表示 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- ===== ログイン画面 ===== -->
+    <div id="login-overlay">
+        <div class="w-full max-w-xs bg-white shadow-md rounded px-8 pt-6 pb-8">
+            <h1 class="text-2xl font-bold mb-6 text-center">動画マニュアル ログイン</h1>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">ID</label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="ID">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">パスワード</label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************">
+            </div>
+            <div class="flex items-center justify-center">
+                <button id="login-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    ログイン
+                </button>
+            </div>
+            <p id="error-message" class="text-red-500 text-xs italic mt-4 text-center"></p>
+        </div>
+    </div>
+
+    <!-- ===== メインコンテンツ ===== -->
+    <div id="main-content">
+        <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <!-- ログインユーザー表示 -->
+            <div id="welcome-message" class="text-right text-gray-600 mb-4"></div>
+
+            <!-- ヘッダー -->
+            <header class="relative rounded-lg shadow-lg mb-8 overflow-hidden">
+                <div class="absolute inset-0 w-full h-full bg-center bg-cover" style="background-image: url('image/contentslist_photo_contact.jpg');">
+                    <div class="absolute inset-0 w-full h-full bg-black opacity-50"></div>
+                </div>
+                <div class="relative z-10 p-8">
+                     <h1 class="text-4xl sm:text-5xl font-extrabold text-white">
+                        角井食品 動画マニュアル
+                    </h1>
+                    <p class="text-xl text-gray-200 mt-1">Kakui Foods Video Manual</p>
+                </div>
+            </header>
+
+            <main class="max-w-4xl mx-auto">
+                
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">作業場所リスト</h2>
+                        <div class="flex items-center">
+                            <span class="text-sm text-gray-500 mr-3">最新のシフトはこちら</span>
+                            <a href="https://docs.google.com/spreadsheets/d/1kX9CZhXjvsi6EftpH1xKbJpXVvJ2XMzHh3YLSowP-ZM/edit?usp=sharing" target="_blank" class="inline-flex items-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transform hover:scale-105 transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                </svg>
+                                調理場シフト
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6">見たい作業場所をクリックしてください。</p>
+
+                    <!-- マニュアルのリスト -->
+                    <div id="manual-list" class="space-y-4">
+
+                        <!-- ===== 更新されたマニュアル (NEW) ===== -->
+                        <div class="border-2 border-red-500 rounded-lg shadow-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-800 bg-red-100 hover:bg-red-200 transition-colors rounded-t-lg">
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                    更新されたマニュアル
+                                    <span class="ml-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full animate-pulse">NEW</span>
+                                </span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg">
+                                <ul class="p-4 space-y-2 border-t">
+                                    <!-- ここに新しい動画のリンクを追加します -->
+                                    <li><a href="https://youtube.com/shorts/qJLR4O92JIQ?feature=share" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-red-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>パテのパン粉のつけ方（2025年7月更新）</a></li>
+                                    <li><a href="https://anzeninfo.mhlw.go.jp/information/kyozaishiryo.html" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-red-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>あんぜん教育動画（言語を選択してから、飲食料品製造業を選択）（2025年7月更新）</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- ===== 衛生管理 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                    衛生管理
+                                </span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg">
+                                <ul class="p-4 space-y-2 border-t"></ul>
+                            </div>
+                        </div>
+
+                        <!-- ===== 安全教育 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                    安全教育
+                                </span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg">
+                                <ul class="p-4 space-y-2 border-t">
+                                    <li><a href="https://anzeninfo.mhlw.go.jp/information/kyozaishiryo.html" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-yellow-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>あんぜん教育動画（言語を選択してから、飲食料品製造業を選択）</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- ===== 釜 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>釜</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== フライヤー ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>フライヤー</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg">
+                                <ul class="p-4 space-y-2 border-t">
+                                    <li><a href="https://youtube.com/shorts/qJLR4O92JIQ?feature=share" target="_blank" class="flex items-center p-2 text-gray-600 hover:bg-blue-50 rounded-md transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>パテのパン粉のつけ方</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- ===== スチコン ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>スチコン</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== 肉処理 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>肉処理</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== 切込 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>切込</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== 野菜 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>野菜</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== 炊飯 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>炊飯</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+
+                        <!-- ===== サンドライン ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>サンドライン</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== 弁当ライン ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>弁当ライン</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== おにぎり ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>おにぎり</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== ベルーナ ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>ベルーナ</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== 冷凍作業 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>冷凍作業</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+                        <!-- ===== 検品・梱包 ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>検品・梱包</span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg"><ul class="p-4 space-y-2 border-t"></ul></div>
+                        </div>
+
+                        <!-- ===== その他エリア ===== -->
+                        <div class="border rounded-lg">
+                            <button class="accordion-button w-full flex justify-between items-center p-4 text-left text-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors rounded-t-lg">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-3 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                                    その他エリア
+                                </span>
+                                <svg class="accordion-icon h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                            <div class="accordion-content bg-white rounded-b-lg">
+                                <ul class="p-4 space-y-2 border-t"></ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </main>
+
+            <!-- フッター -->
+            <footer class="text-center mt-8">
+                <p class="text-gray-500">&copy; 2024 角井食品株式会社</p>
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- ユーザーデータ ---
+            // passwordlist.txtの内容をここに埋め込みます
+            const users = [
+                { id: 'miho', pass: '1234', name: '角井社長' },
+                { id: 'hiromitsu', pass: '5678', name: '角井部長' },
+                { id: 'bada', pass: '9101112', name: 'バダ' }
+            ];
+
+            // --- DOM要素の取得 ---
+            const loginOverlay = document.getElementById('login-overlay');
+            const mainContent = document.getElementById('main-content');
+            const loginButton = document.getElementById('login-button');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorMessage = document.getElementById('error-message');
+            const welcomeMessage = document.getElementById('welcome-message');
+
+            // --- ログイン処理 ---
+            function attemptLogin() {
+                const id = usernameInput.value;
+                const pass = passwordInput.value;
+                const user = users.find(u => u.id === id && u.pass === pass);
+
+                if (user) {
+                    // ログイン成功
+                    sessionStorage.setItem('loggedInUser', user.name); // セッションストレージに名前を保存
+                    showMainContent();
+                } else {
+                    // ログイン失敗
+                    errorMessage.textContent = 'IDまたはパスワードが正しくありません。';
+                }
+            }
+
+            // --- メインコンテンツ表示処理 ---
+            function showMainContent() {
+                const loggedInUser = sessionStorage.getItem('loggedInUser');
+                if (loggedInUser) {
+                    loginOverlay.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    welcomeMessage.textContent = `ようこそ、${loggedInUser}さん`;
+                    initializeAccordion(); // アコーディオン機能を初期化
+                }
+            }
+            
+            // --- アコーディオン機能の初期化 ---
+            function initializeAccordion() {
+                try {
+                    const accordionButtons = document.querySelectorAll('.accordion-button');
+                    accordionButtons.forEach(button => {
+                        // すでにイベントリスナーが登録されているかチェック
+                        if (button.dataset.initialized) return;
+
+                        button.addEventListener('click', () => {
+                            const content = button.parentElement.querySelector('.accordion-content');
+                            if (content) {
+                                const isOpen = button.classList.contains('open');
+                                if (isOpen) {
+                                    button.classList.remove('open');
+                                    content.style.maxHeight = null;
+                                } else {
+                                    button.classList.add('open');
+                                    content.style.maxHeight = content.scrollHeight + 'px';
+                                }
+                            }
+                        });
+                        button.dataset.initialized = 'true'; // 初期化済みフラグを立てる
+                    });
+                } catch (e) {
+                    console.error('アコーディオンでエラーが発生しました:', e);
+                }
+            }
+
+            // --- イベントリスナーの設定 ---
+            loginButton.addEventListener('click', attemptLogin);
+            passwordInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    attemptLogin();
+                }
+            });
+
+            // --- ページ読み込み時の処理 ---
+            // ページが再読み込みされた場合でもログイン状態を維持する
+            showMainContent();
+        });
+    </script>
+
+</body>
+</html>

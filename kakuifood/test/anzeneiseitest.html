@@ -83,6 +83,9 @@
                      
                      <div class="flex items-center justify-center gap-4 mb-4">
                         <p id="score" class="text-center text-3xl font-bold"></p>
+                        <button id="report-trigger-btn" class="hidden bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50">
+                            <ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する
+                        </button>
                      </div>
 
                      <p id="feedback-message" class="text-center text-lg font-semibold my-6 p-3 rounded-lg"></p>
@@ -91,16 +94,11 @@
                          <!-- 各問題のフィードバックはここに挿入されます -->
                      </div>
                      
-                     <div class="mt-8 text-center">
-                        <button id="report-trigger-btn" class="hidden bg-red-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-50">
-                            <ruby>角井部長<rt>かくいぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>する
+                     <div id="retake-actions" class="hidden mt-8 text-center">
+                        <button id="retake-btn" class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 transform hover:scale-105">
+                            もう<ruby>一度<rt>いちど</rt></ruby>テストする
                         </button>
-                        <div id="retake-actions" class="hidden flex flex-col items-center gap-2">
-                            <button id="retake-btn" class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300 transform hover:scale-105">
-                                もう<ruby>一度<rt>いちど</rt></ruby>テストする
-                            </button>
-                            <p id="encourage-message" class="text-gray-600 font-semibold mt-2">100<ruby>点<rt>てん</rt></ruby> とるまで がんばって！</p>
-                        </div>
+                        <p id="encourage-message" class="text-gray-600 font-semibold mt-2">100<ruby>点<rt>てん</rt></ruby> とるまで がんばって！</p>
                      </div>
                 </div>
             </div>
@@ -110,8 +108,10 @@
                 <h2 class="text-2xl font-bold text-gray-800"><ruby>合格<rt>ごうかく</rt></ruby> おめでとう！</h2>
                 <div class="my-6 text-lg space-y-2">
                     <p><strong class="font-semibold">なまえ：</strong> <span id="summary-name"></span></p>
-                    <p><strong class="font-semibold">てんすう：</strong> <span id="summary-score" class="text-red-500 font-bold">100点</span></p>
-                    <p><strong class="font-semibold">かいすう：</strong> <span id="summary-attempts"></span><ruby>回目<rt>かいめ</rt></ruby>で <ruby>合格<rt>ごうかく</rt></ruby></p>
+                    <div id="summary-history-container" class="mt-4 pt-4 border-t">
+                        <h3 class="font-semibold"><ruby>てんすう<rt>てんすう</rt></ruby>の <ruby>りれき<rt>りれき</rt></ruby></h3>
+                        <div id="summary-history" class="text-base space-y-1"></div>
+                    </div>
                 </div>
                 <p class="text-gray-600 mb-4"><ruby>下<rt>した</rt></ruby>の ボタンを <ruby>押<rt>お</rt></ruby>して、この <ruby>画面<rt>がめん</rt></ruby>を <ruby>部長<rt>ぶちょう</rt></ruby>に <ruby>報告<rt>ほうこく</rt></ruby>してください。</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -191,7 +191,7 @@
         const retakeActions = document.getElementById('retake-actions');
         const reportSummaryContainer = document.getElementById('report-summary-container');
         const summaryName = document.getElementById('summary-name');
-        const summaryAttempts = document.getElementById('summary-attempts');
+        const summaryHistory = document.getElementById('summary-history');
         const shareBtn = document.getElementById('share-btn');
         
         // --- 関数 ---
@@ -332,7 +332,13 @@
 
         reportTriggerBtn.addEventListener('click', () => {
             summaryName.textContent = userName;
-            summaryAttempts.textContent = testCount;
+            summaryHistory.innerHTML = '';
+            scoreHistory.forEach((score, index) => {
+                const p = document.createElement('p');
+                p.innerHTML = `${index + 1}<ruby>回目<rt>かいめ</rt></ruby>： ${score * 5}<ruby>点<rt>てん</rt></ruby>`;
+                summaryHistory.appendChild(p);
+            });
+
             quizWrapper.classList.add('hidden');
             reportSummaryContainer.classList.remove('hidden');
         });
